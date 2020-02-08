@@ -1,0 +1,9 @@
+version: '3'
+services:
+  
+  postgres:
+    image: "postgres:12.0"
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"

@@ -1,0 +1,19 @@
+apiVersion: skaffold/v1
+kind: Config
+metadata:
+  name: vishnu
+build:
+  artifacts:
+  - image: 100edockerregistry.azurecr.io/vishnu
+#  local:
+#    push: false
+deploy:
+  helm:
+    releases:
+      - name: vishnu
+        chartPath: ci/vishnu
+        namespace: vishnu
+        values:
+          image: 100edockerregistry.azurecr.io/vishnu
+        setValueTemplates:
+          postgresql.password: "{{.POSTGRES_PASSWORD}}"
