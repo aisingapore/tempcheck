@@ -1,6 +1,6 @@
 FROM docker-registry.int.aisingapore.org/gitlab-runner-base:latest
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get install nodejs
 
 RUN curl -LO https://get.helm.sh/helm-v2.11.0-linux-amd64.tar.gz && \
@@ -11,7 +11,5 @@ RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/sk
     chmod +x skaffold && \
     mv skaffold /usr/local/bin && \
     helm init --client-only
-
-RUN helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
 
 RUN apt-get update && apt-get install -y libpq-dev

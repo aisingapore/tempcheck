@@ -3,7 +3,7 @@
 image: docker-registry.int.aisingapore.org/gitlab-runner-sensemaker:latest
 
 variables:
-  vishnu_IMG: "vishnu:test"
+  VISHNU_IMG: "vishnu:test"
 
 stages:
   - code_check
@@ -16,7 +16,7 @@ code_check:
     - pip install -r requirements.txt
     - pylint -E vishnu
     - cd frontend && npm install && npm run build && cd ..
-    - docker build . -t $vishnu_IMG # Check to ensure docker image for app can be built
+    - docker build . -t VISHNU_IMG # Check to ensure docker image for app can be built
     - helm lint ci/vishnu
 
 tests:
