@@ -14,8 +14,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.views.generic import TemplateView
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+from .routers import router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("api/", include(router.urls)),
+
+    # Authentication
+    path("",
+         TemplateView.as_view(template_name="application.html"),
+         name="app",
+         )
 ]
+
+# Required to serve static files in prod. Workaround for now
+# Use https://pypi.org/project/dj-static/ or other solutions instead in future
+urlpatterns += staticfiles_urlpatterns()
