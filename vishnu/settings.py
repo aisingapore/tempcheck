@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework.authtoken',
     'storages',
+    'vishnu.apps.VishnuConfig'
 ]
 
 # Enable below later
