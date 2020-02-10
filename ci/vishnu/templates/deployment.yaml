@@ -35,11 +35,6 @@ spec:
               value: "vishnudb"
             - name: "POSTGRES_HOST"
               value: "vishnu-postgresql"
-            - name: "AZURE_ACCOUNT_KEY"
-              valueFrom:
-                secretKeyRef:
-                  name: "vishnu-azure"
-                  key: "azure-key"
           envFrom:
             - configMapRef:
                 name: prod-configmap
