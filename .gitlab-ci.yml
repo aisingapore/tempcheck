@@ -16,7 +16,7 @@ code_check:
     - pip install -r requirements.txt
     - pylint -E vishnu
     - cd frontend && npm install && npm run build && cd ..
-    - docker build . -t VISHNU_IMG # Check to ensure docker image for app can be built
+    - docker build . -t $VISHNU_IMG # Check to ensure docker image for app can be built
     - helm lint ci/vishnu
 
 tests:
