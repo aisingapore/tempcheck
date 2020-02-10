@@ -15,5 +15,5 @@ deploy:
         namespace: vishnu
         values:
           image: 100edockerregistry.azurecr.io/vishnu
-        setValueTemplates:
-          postgresql.password: "{{.POSTGRES_PASSWORD}}"
+#        setValueTemplates:
+#          postgresql.password: "{{.POSTGRES_PASSWORD}}"
