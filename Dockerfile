@@ -12,13 +12,12 @@ RUN groupadd -r --gid $APP_USER_ID $APP_USER && \
 
 RUN apt-get update && apt-get install -y gcc libpq-dev
 
-USER sensemaker
+USER vishnu
 
 COPY templates templates
-COPY sensemaker sensemaker
+COPY vishnu vishnu
 COPY requirements.txt scripts/start_app.sh manage.py ./
 COPY frontend frontend
-COPY solr solr
 
 ENV VIRTUAL_ENV=$APP_DIR/venv
 
