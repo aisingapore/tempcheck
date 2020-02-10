@@ -43,4 +43,4 @@ postgresql:
   postgresqlDatabase: "vishnudb"
   existingSecret: "vishnu-postgresql"
   # below is not the real password, real password needs to be passed in when running Helm
-#  postgresqlPostgresPassword: password
+  password: password
