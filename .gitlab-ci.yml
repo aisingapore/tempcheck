@@ -1,6 +1,6 @@
 # Refer to gitlab CI job configuration docs for details
 # https://docs.gitlab.com/ee/ci/yaml/
-image: docker-registry.int.aisingapore.org/gitlab-runner-sensemaker:latest
+image: docker-registry.int.aisingapore.org/gitlab-runner-vishnu:latest
 
 variables:
   VISHNU_IMG: "vishnu:test"
