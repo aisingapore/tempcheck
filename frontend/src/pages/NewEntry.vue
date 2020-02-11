@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h1>Hello {{ name }}</h1>
-    <h2>Past Records</h2>
+    <h2>New Entry</h2>
     <entry-form />
   </div>
 </template>

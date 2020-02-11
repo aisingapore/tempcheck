@@ -5,28 +5,41 @@
     <button @click="goToNewEntry()">New Entry</button>
     <h2>Past Records</h2>
     <ul>
-      <p v-for="item in list" :key="item.id"><a href="https://vuejs.org" target="_blank" rel="noopener">Temperature: {{ item.temperature }}</a></p><br />
+      <p v-for="item in list" :key="item.id">Temperature: {{ item.temperature }} </p><br />
     </ul>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'hello',
   data () {
     return {
       name: 'Ning Yu',
-      list: [
-        {
-          id: 1,
-          temperature: 37.1
-        },
-        {
-          id: 2,
-          temperature: 37.2
-        }
-      ]
+      list: []
     }
+  },
+  methods: {
+    async getEntries () {
+      const url = '/api/entries'
+      const headers = {
+        Authorization: 'Basic bmluZzpjc3k0YnFmNQ=='
+      }
+      try {
+        const response = await axios.get(url, { headers })
+        console.log(response.data)
+        this.list = response.data
+      } catch (err) {
+        console.log('Error:', err)
+      }
+    },
+    goToNewEntry () {
+      this.$router.push('/entries/new')
+    }
+  },
+  mounted () {
+    this.getEntries()
   }
 }
 </script>

@@ -1,5 +1,10 @@
 from rest_framework import viewsets, permissions, mixins
 
+from .serializers import EntrySerializer
+from .models import Entry
+
+# pylint: disable=no-member
+
 class ImmutableViewSet(mixins.CreateModelMixin,
                                 mixins.ListModelMixin,
                                 mixins.RetrieveModelMixin,
@@ -10,12 +15,6 @@ class ImmutableViewSet(mixins.CreateModelMixin,
     To use it, override the class and set the `.queryset` and
     `.serializer_class` attributes.
     """
-    pass
-
-
-from .serializers import EntrySerializer
-from .models import Entry
-
 class EntryViewSet(ImmutableViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = EntrySerializer
