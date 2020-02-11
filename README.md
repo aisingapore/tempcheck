@@ -46,6 +46,7 @@ First, activate the Python environment using `conda activate` or `venv`. If not 
 ```bash
 # Using conda
 conda install -f requirements.txt
+
 # Using venv
 python -m venv venv
 pip install -r requirements.txt
@@ -78,16 +79,20 @@ TBA
 
 ### Changing database schema
 
-If you change the schema of the database, make sure to run `python manage.py makemigrations` and `python manage.py migrate`.
+If you change the schema of the database, make sure to run: 
+
+`python manage.py makemigrations` 
+
+and
+ 
+`python manage.py migrate`
 
 
 ## Deployment
 
+
+
 See [gitlab-ci config](.gitlab-ci.yml)
-
-<!-- Reference links -->
-
-[1]: https://www.lucidchart.com/publicSegments/view/9643e4df-0c19-483c-a490-5b4fd451e9e5/image.png
 
 ## APIs
 
@@ -97,3 +102,7 @@ The available APIs can be found under `sensemaker/urls.py`.
 ## Acknowledgements
 
 This project  is supported by the National Research Foundation, Singapore under its AI Singapore Programme (AISG-RP-2019-050). Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not reflect the views of National Research Foundation, Singapore.
+
+<!-- Reference links -->
+
+[1]: https://www.lucidchart.com/publicSegments/view/9643e4df-0c19-483c-a490-5b4fd451e9e5/image.png
