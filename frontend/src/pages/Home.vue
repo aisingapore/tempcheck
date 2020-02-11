@@ -2,13 +2,14 @@
   <div class="hello">
     <img src="../assets/logo.png" alt="Vue.js PWA" />
     <h1>Hello {{ name }}</h1>
-    <button @click="goToNewEntry()">New Entry</button>
+    <button class="btn-new-entry" @click="goToNewEntry()">New Entry</button>
     <h2>Past Records</h2>
     <ul>
       <entry
         v-for="item in list"
         :key="item.id"
-        :temperatre="item.temperature"
+        :temperature="parseFloat(item.temperature)"
+        :timeTaken="new Date(item.date_created)"
       />
     </ul>
   </div>
@@ -71,5 +72,10 @@ li {
 
 a {
   color: #35495e;
+}
+
+.btn-new-entry {
+  background-color: lightgrey;
+  font-size: 12px;
 }
 </style>

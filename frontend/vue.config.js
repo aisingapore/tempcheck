@@ -5,7 +5,7 @@ module.exports = {
     process.env.NODE_ENV === "development" ? "http://0.0.0.0:8080/" : "/",
   outputDir: "./dist/",
   assetsDir: "static",
-  lintOnSave: true,
+
   chainWebpack: config => {
     config.optimization.splitChunks(false);
 
