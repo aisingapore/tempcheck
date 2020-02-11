@@ -2,7 +2,7 @@
   <div>
     <h2>New Entry</h2>
     <form>
-      <input v-model="temperature" placeholder="edit me" class="form-input-text">
+      <input v-model="temperature" placeholder="Temperature" class="form-input-text">
     </form>
   </div>
 </template>

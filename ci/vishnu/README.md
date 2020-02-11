@@ -8,7 +8,7 @@ application.
 Run this one level up from this directory
 
 ```
-helm install --name=vishnu --namespace=vishnu --set postgresql.password="real password" .
+helm install vishnu --name=vishnu --namespace=vishnu --set postgresql.password="real password" .
 ```
 
 ## Upgrade
