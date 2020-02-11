@@ -2,15 +2,17 @@
   <div class="hello">
     <h1>Hello {{ name }}</h1>
     <h2>Past Records</h2>
-    <ul>
-      <p v-for="item in list" :key="item.id"><a href="https://vuejs.org" target="_blank" rel="noopener">Temperature: {{ item.temperature }}</a></p><br />
-    </ul>
+    <entry-form />
   </div>
 </template>
 
 <script>
+import EntryForm from '@/components/EntryForm'
 export default {
   name: 'hello',
+  components: {
+    'entry-form': EntryForm
+  },
   data () {
     return {
       name: 'Ning Yu',
