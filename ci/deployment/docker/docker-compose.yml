@@ -1,0 +1,26 @@
+version: '3'
+services:
+  # Make sure you have a env file in the current folder with the following keys:
+  # Set the values accordingly.
+  # POSTGRES_DB=vishnudb
+  # POSTGRES_USER=vishnu
+  # POSTGRES_PASSWORD=vishnu
+  # POSTGRES_HOST=vishnu_postgres
+  # POSTGRES_PORT=5432
+  vishnu_postgres:
+    image: "postgres:12.0"
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+  vishnu:
+    image: "vishnu:latest"
+    environment:
+      - POSTGRES_HOST=vishnu_postgres
+    env_file:
+      - .env
+    # Map your host port accordingly
+    ports:
+     - 8080:8000
+    depends_on:
+     - vishnu_postgres
