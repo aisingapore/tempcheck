@@ -7,15 +7,15 @@
 </template>
 
 <script>
-import EntryForm from '@/components/EntryForm'
+import EntryForm from "@/components/EntryForm";
 export default {
-  name: 'hello',
+  name: "hello",
   components: {
-    'entry-form': EntryForm
+    "entry-form": EntryForm
   },
-  data () {
+  data() {
     return {
-      name: 'Ning Yu',
+      name: "Ning Yu",
       list: [
         {
           id: 1,
@@ -26,14 +26,15 @@ export default {
           temperature: 37.2
         }
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 
@@ -48,6 +49,6 @@ li {
 }
 
 a {
-  color: #35495E;
+  color: #35495e;
 }
 </style>
