@@ -51,7 +51,12 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework.authtoken',
     'storages',
+    'knox'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
 
 # Enable below later
 # REST_FRAMEWORK = {

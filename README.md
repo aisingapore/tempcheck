@@ -74,7 +74,16 @@ main interface for the app.
 
 ### Adding/viewing data in database
 
-TBA
+You may also query the database directly by running psql in the running Postgres instance:
+
+```bash
+source .env
+docker exec -it \
+    vishnu_postgres_vishnu_1 \
+    psql \
+    -U ${POSTGRES_USER} \
+    -a ${POSTGRES_DB}
+```
 
 ### Changing database schema
 
