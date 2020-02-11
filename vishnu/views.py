@@ -29,7 +29,7 @@ class LoginAPI(generics.GenericAPIView):
             "token": AuthToken.objects.create(user)[1]
         })
 
-class UserAPI(generics.RetrieveAPIView):
+class UserAPI(generics.RetrieveAPIView): # Same as baseview set later on
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = UserSerializer
 
