@@ -2,42 +2,58 @@
 <v-container fluid>
     <v-form>
       <v-row justify="center">
-        <v-col cols="4">
-          <v-row justify="center">
-            <v-col cols="4">
-              <v-text-field
-                v-model="temperature"
-                label="Enter temperature"
-                required
-              ></v-text-field>
+        <v-col cols="12">
+          <v-row justify="center" class="pa-0 ma-0">
+            <v-col cols="1" class="pa-0 ma-0">
+              <v-icon>mdi-thermometer-lines</v-icon>
             </v-col>
           </v-row>
+          <v-row justify="center">
+            <v-col cols="2" xs="12">
+              <v-slider
+                v-model="temperature"
+                min="34"
+                max="44"
+                thumb-label="always"
+                step="0.1"
+                vertical
+                prepend-icon="mdi-minus"
+                append-icon="mdi-plus"
+              ></v-slider>
+            </v-col>
+          </v-row>
+<!--          <v-row justify="center">-->
+<!--            <v-col cols="4">-->
+<!--              <v-text-field-->
+<!--                v-model="temperature"-->
+<!--                label="Enter temperature"-->
+<!--                required-->
+<!--              ></v-text-field>-->
+<!--            </v-col>-->
+<!--          </v-row>-->
 <!--          <v-row justify="center">-->
 <!--            <input type="file" accept="image/*" id="file-input" capture=""/>-->
 <!--          </v-row>-->
 
 <!-- The vuetify file input may not have Camera capture capability -->
-          <v-row justify="center">
-            <v-col cols="5">
+          <v-row justify="center" class="pb-0 mb-0">
+            <v-col cols="2" xs="10" class="pb-0 mb-0">
               <v-file-input
                 accept="image/*"
-                id="file-input2"
+                id="file-input"
                 capture=""
                 label="Capture"
                 filled prepend-icon="mdi-camera"
+                height="10"
                 dense
               ></v-file-input>
             </v-col>
           </v-row>
-          <v-row justify="center">
-            <b>{{
-              this.location.latitude
-                ? `Lat:${this.location.latitude} | Long: ${this.location.longitude}`
-                : "Getting location..."
-            }}</b
-            ><br /><br />
-            Time of submission: <br />
-            <b>{{ currTime ? getDateTime(currTime) : "" }}</b>
+          <v-row justify="center" class="pa-1">
+            <b>{{ location }}</b>
+          </v-row>
+          <v-row justify="center" class="pa-1">
+            <b>{{ currentTime }}</b>
           </v-row>
           <v-row justify="center">
             <v-btn
@@ -79,9 +95,8 @@ export default {
   name: "entry-form",
   data: () => ({
     temperature: 37,
-    location: {},
-    currTime: null,
-    file: null
+    file: null,
+    locationMsg: "Getting location"
   }),
   methods: {
     getDateTime(time) {
@@ -96,19 +111,29 @@ export default {
       }${minutes} ${minutes > 12 ? "PM" : "AM"}`;
     },
     getLocation() {
+      const vm = this;
       console.log("Attempting to get location");
+
+      const locError = function(error) {
+        console.error("Failed to get location", error);
+        vm.locationMsg = "Please enable location access...";
+      }
+
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(this.showPosition);
+        console.log("Accessing location");
+        navigator.geolocation.getCurrentPosition(this.showPosition, locError);
       } else {
         console.log("Geo Location not supported by browser");
       }
     },
     // function that retrieves the position
     showPosition(position) {
-      this.location = {
+      const geolocation = {
         longitude: position.coords.longitude,
         latitude: position.coords.latitude
       };
+      console.log("Location", geolocation);
+      this.locationMsg = "Lat: "+geolocation.latitude+ " | " + "Long: "+ geolocation.longitude;
     },
     submit() {
       const method = "post";
@@ -128,7 +153,6 @@ export default {
   },
   mounted() {
     this.getLocation();
-    this.currTime = new Date(Date.now());
 
     const getImage = (files) => {
 
@@ -152,6 +176,25 @@ export default {
 
     const fileInput = document.getElementById('file-input');
     fileInput.addEventListener('change', (e) => getImage(e.target.files));
+  },
+  computed: {
+    location: function() {
+      console.log("Getting computed location");
+      return this.locationMsg;
+    },
+    currentTime: function() {
+      // Date is not reactive, make it so later
+      const time = new Date(Date.now());
+      const hour = time.getHours();
+      const minutes = time.getMinutes();
+      const year = time.getFullYear();
+      const date = time.getDate();
+      const month = months[time.getMonth()];
+      const day = days[time.getDay()];
+      return `${day}, ${date} ${month} ${year} ${hour % 12}:${
+        minutes < 10 ? "0" : ""
+      }${minutes} ${minutes > 12 ? "PM" : "AM"}`;
+    }
   }
 };
 </script>
