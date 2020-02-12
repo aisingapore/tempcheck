@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User
 from django.contrib.auth import authenticate
+from django.conf import settings
 
 ###############################################
 ##              Register Users              ##
@@ -16,10 +17,10 @@ class CreateUserSerializer(serializers.ModelSerializer):
         '''
         Check that only certain domains are allowed to register
         '''
-
+        
+        domain_list = settings.DOMAIN_LIST
         email = data['email']
         domain = email.split('@')[1]
-        domain_list = ["gmail.com", "nus.edu.sg",]
         if domain not in domain_list:
             raise serializers.ValidationError("Please enter an Email Address with a valid domain")
         return data

@@ -36,6 +36,8 @@ ALLOWED_HOSTS = [app_hostname, gethostbyname(
     app_hostname), "localhost", "loa.ai3.aisingapore.org",
     "127.0.0.1"]
 
+# Config to change acceptable domain names
+DOMAIN_LIST = ["gmail.com", "nus.edu.sg",]
 
 # Application definition
 
