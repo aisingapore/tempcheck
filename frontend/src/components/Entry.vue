@@ -26,12 +26,14 @@ const months = [
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default {
-  name: "entry-form",
+  name: "entry",
   computed: {
     getTime() {
       const hour = this.timeTaken.getHours();
       const minutes = this.timeTaken.getMinutes();
-      return `${hour % 12}:${minutes < 10 ? "0" : ""}${minutes} ${minutes > 12 ? "PM" : "AM"}`;
+      return `${hour % 12}:${minutes < 10 ? "0" : ""}${minutes} ${
+        hour > 12 ? "PM" : "AM"
+      }`;
     },
     getDate() {
       const year = this.timeTaken.getFullYear();
