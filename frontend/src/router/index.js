@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Router from "vue-router";
 import HelloWorld from "@/components/HelloWorld";
-import Home from "@/pages/Home";
-import NewEntry from "@/pages/NewEntry";
+import History from "@/pages/History";
+import New from "@/pages/New";
 
 Vue.use(Router);
 
@@ -14,14 +14,14 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: "/home",
-      name: "Home",
-      component: Home
+      path: "/history",
+      name: "history",
+      component: History
     },
     {
-      path: "/entries/new",
-      name: "NewEntry",
-      component: NewEntry
+      path: "/new",
+      name: "New",
+      component: New
     }
   ]
 });

@@ -1,10 +1,34 @@
 <template>
-  <div class="entry-container">
-    <span class="date-time">{{ getTime }}, {{ getDate }}</span
-    ><br />
-    Temperature: <b>{{ temperature.toFixed(1) }}</b
-    >&deg;C
-  </div>
+  <v-dialog v-model="dialog" width="100%">
+    <template v-slot:activator="{ on }">
+      <div class="entry-container" v-on="on">
+        <span class="date-time">{{ getTime }}, {{ getDate }}</span
+        ><br />
+        <span class="display-1">{{ temperature.toFixed(1) }}</span>
+        <span class="deg-c">&deg;C</span>
+      </div>
+    </template>
+    <v-card>
+      <v-card-title class="headline yellow lighten-4">
+        <v-container>
+          <v-row class="mt-n6 mb-n3">
+            <v-col cols="12" class="text-right body-2 grey--text">
+              Your temperature at {{ getTime }},<br />
+              {{ getDate }}:
+            </v-col>
+          </v-row>
+          <v-row class="text-right mb-n3">
+            <v-col cols="12" class="text-right grey--text text--darken-2">
+              <span class="display-2">{{ temperature.toFixed(1) }}</span>
+              <span class="body-2">&deg;C</span>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-title>
+
+      <v-card-text> </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -58,14 +82,21 @@ export default {
 <style scoped>
 .entry-container {
   background-color: linen;
-  width: 40%;
+  width: 185px;
   display: block;
   margin: 10px auto;
-  padding: 8px 20px;
+  padding: 8px 10px;
 }
 
 .date-time {
   font-size: 12px;
   color: lightslategrey;
+}
+
+.deg-c {
+  display: inline-block;
+  margin-top: 3px;
+  margin-left: 2px;
+  vertical-align: top;
 }
 </style>

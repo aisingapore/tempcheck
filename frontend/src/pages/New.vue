@@ -3,7 +3,7 @@
     <h1>Hello {{ name }}</h1>
     <h2>New Entry</h2>
     <entry-form />
-    <button @click="goToHome">Back to Home</button>
+    <button @click="goToHome">History</button>
   </div>
 </template>
 
@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     goToHome() {
-      this.$router.push("/home");
+      this.$router.push("/history");
     }
   }
 };

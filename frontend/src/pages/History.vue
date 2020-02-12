@@ -1,18 +1,25 @@
 <template>
-  <div class="hello">
-    <img src="../assets/logo.png" alt="Vue.js PWA" />
-    <h1>Hello {{ name }}</h1>
-    <button class="btn-new-entry" @click="goToNewEntry()">New Entry</button>
-    <h2>Past Records</h2>
-    <ul>
+  <v-container fluid>
+    <v-row>
+      <v-col>
+        <h1>History</h1>
+      </v-col>
+    </v-row>
+    <v-row class="mt-n3">
+      <v-col>
+        <v-btn color="primary" @click="goToNewEntry()">New Entry</v-btn>
+      </v-col>
+    </v-row>
+    <div class="entry-list">
       <entry
         v-for="item in list"
         :key="item.id"
         :temperature="parseFloat(item.temperature)"
         :timeTaken="new Date(item.date_created)"
+        :location="{ lat: item.lat, long: item.long }"
       />
-    </ul>
-  </div>
+    </div>
+  </v-container>
 </template>
 
 <script>
@@ -54,28 +61,14 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
-h1,
-h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #35495e;
-}
-
+<style scoped>
 .btn-new-entry {
   background-color: lightgrey;
   font-size: 12px;
+}
+
+.entry-list {
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>

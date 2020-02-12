@@ -13,7 +13,7 @@
               <v-slider
                 v-model="temperature"
                 min="35"
-                max="41"
+                max="39"
                 thumb-label="always"
                 step="0.1"
                 prepend-icon="mdi-minus"
