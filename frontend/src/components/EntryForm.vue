@@ -41,6 +41,7 @@ const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default {
   name: "entry-form",
   data: () => ({
+<<<<<<< HEAD
     temperature: null,
     location: {},
     currTime: null,
@@ -94,6 +95,39 @@ export default {
   mounted() {
     this.getLocation();
     this.currTime = new Date(Date.now());
+=======
+    temperature: null
+  }),
+  methods: {
+    submit() {
+      console.log("Submit");
+    }
+  },
+  mounted() {
+
+    const getImage = (files) => {
+
+      function draw() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+      }
+
+      function failed() {
+        console.error("The provided file couldn't be loaded as an Image media");
+      }
+
+      console.log("Images", files);
+      const file = files[0];
+      var img = new Image();
+      img.onload = draw;
+      img.onerror = failed;
+      img.src = URL.createObjectURL(file);
+    };
+
+    const fileInput = document.getElementById('file-input');
+    fileInput.addEventListener('change', (e) => getImage(e.target.files));
+>>>>>>> Add image capture and display in entry form
   }
 };
 </script>
