@@ -1,5 +1,5 @@
 <template>
-<v-container fluid>
+  <v-container fluid>
     <v-form>
       <v-row justify="center">
         <v-col cols="12">
@@ -8,45 +8,34 @@
               <v-icon>mdi-thermometer-lines</v-icon>
             </v-col>
           </v-row>
-          <v-row justify="center">
-            <v-col cols="2" xs="12">
+          <v-row justify="center" class="mt-n3">
+            <v-col cols="10" xs="12">
               <v-slider
                 v-model="temperature"
-                min="34"
-                max="44"
+                min="35"
+                max="41"
                 thumb-label="always"
                 step="0.1"
-                vertical
                 prepend-icon="mdi-minus"
                 append-icon="mdi-plus"
               ></v-slider>
             </v-col>
           </v-row>
-<!--          <v-row justify="center">-->
-<!--            <v-col cols="4">-->
-<!--              <v-text-field-->
-<!--                v-model="temperature"-->
-<!--                label="Enter temperature"-->
-<!--                required-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
-<!--          </v-row>-->
-<!--          <v-row justify="center">-->
-<!--            <input type="file" accept="image/*" id="file-input" capture=""/>-->
-<!--          </v-row>-->
-
-<!-- The vuetify file input may not have Camera capture capability -->
-          <v-row justify="center" class="pb-0 mb-0">
-            <v-col cols="2" xs="10" class="pb-0 mb-0">
-              <v-file-input
+          <!-- The vuetify file input may not have Camera capture capability -->
+          <v-row class="mt-n3">
+            <v-col>
+              <vue-picture-input
+                height="300"
+                width="300"
                 accept="image/*"
-                id="file-input"
-                capture=""
-                label="Capture"
-                filled prepend-icon="mdi-camera"
-                height="10"
-                dense
-              ></v-file-input>
+                size="10"
+                ref="fileInput"
+                @change="fileUpload"
+                :custom-strings="{
+                  tap: 'Tap to <br />upload image',
+                  drag: 'Drag to upload image'
+                }"
+              />
             </v-col>
           </v-row>
           <v-row justify="center" class="pa-1">
@@ -55,17 +44,10 @@
           <v-row justify="center" class="pa-1">
             <b>{{ currentTime }}</b>
           </v-row>
-          <v-row justify="center">
-            <v-btn
-                color="success"
-                class="mr-4"
-                @click="submit"
-              >
-                Submit
+          <v-row justify="center" class="mt-4">
+            <v-btn color="success" @click="submit">
+              Submit
             </v-btn>
-          </v-row>
-          <v-row justify="center">
-            <canvas id="canvas" width="320" height="240"></canvas>
           </v-row>
         </v-col>
       </v-row>
@@ -75,6 +57,7 @@
 
 <script>
 import axios from "axios";
+import PictureInput from "vue-picture-input";
 const months = [
   "Jan",
   "Feb",
@@ -93,12 +76,20 @@ const months = [
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default {
   name: "entry-form",
+  components: {
+    "vue-picture-input": PictureInput
+  },
   data: () => ({
     temperature: 37,
+    geolocation: {},
     file: null,
     locationMsg: "Getting location"
   }),
   methods: {
+    fileUpload() {
+      console.log("fileInput", this.$refs.fileInput);
+      this.file = this.$refs.fileInput.file;
+    },
     getDateTime(time) {
       const hour = time.getHours();
       const minutes = time.getMinutes();
@@ -117,7 +108,7 @@ export default {
       const locError = function(error) {
         console.error("Failed to get location", error);
         vm.locationMsg = "Please enable location access...";
-      }
+      };
 
       if (navigator.geolocation) {
         console.log("Accessing location");
@@ -133,7 +124,13 @@ export default {
         latitude: position.coords.latitude
       };
       console.log("Location", geolocation);
-      this.locationMsg = "Lat: "+geolocation.latitude+ " | " + "Long: "+ geolocation.longitude;
+      this.geolocation = geolocation;
+      this.locationMsg =
+        "Lat: " +
+        geolocation.latitude +
+        " | " +
+        "Long: " +
+        geolocation.longitude;
     },
     submit() {
       const method = "post";
@@ -144,8 +141,8 @@ export default {
       };
       const data = new FormData();
       data.append("temperature", parseFloat(this.temperature));
-      data.append("long", this.location.longitude);
-      data.append("lat", this.location.latitude);
+      data.append("long", this.geolocation.longitude);
+      data.append("lat", this.geolocation.latitude);
       data.append("file", this.file);
 
       axios({ method, url, headers, data });
@@ -154,11 +151,10 @@ export default {
   mounted() {
     this.getLocation();
 
-    const getImage = (files) => {
-
+    const getImage = files => {
       function draw() {
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
         ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
       }
 
@@ -174,8 +170,8 @@ export default {
       img.src = URL.createObjectURL(file);
     };
 
-    const fileInput = document.getElementById('file-input');
-    fileInput.addEventListener('change', (e) => getImage(e.target.files));
+    const fileInput = document.getElementById("file-input");
+    fileInput.addEventListener("change", e => getImage(e.target.files));
   },
   computed: {
     location: function() {

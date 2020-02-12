@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div id="new-entry">
     <h1>Hello {{ name }}</h1>
     <h2>New Entry</h2>
     <entry-form />
@@ -56,5 +56,9 @@ li {
 
 a {
   color: #35495e;
+}
+
+#new-entry {
+  margin-top: 30px;
 }
 </style>
