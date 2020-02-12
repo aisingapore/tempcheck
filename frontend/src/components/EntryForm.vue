@@ -1,23 +1,60 @@
 <template>
-  <form class="form-input">
-    <input v-model="temperature" placeholder="Temperature" />
-    <input
-      type="file"
-      accept="image/*"
-      capture="user"
-      @change="handleFileInput"
-      ref="file"
-    /><br /><br />
-    <b>{{
-      this.location.latitude
-        ? `Lat:${this.location.latitude} | Long: ${this.location.longitude}`
-        : "Getting location..."
-    }}</b
-    ><br /><br />
-    Time of submission: <br />
-    <b>{{ currTime ? getDateTime(currTime) : "" }}</b>
-    <button @click="submit" class="btn-submit">Submit</button>
-  </form>
+<v-container fluid>
+    <v-form>
+      <v-row justify="center">
+        <v-col cols="4">
+          <v-row justify="center">
+            <v-col cols="4">
+              <v-text-field
+                v-model="temperature"
+                label="Enter temperature"
+                required
+              ></v-text-field>
+            </v-col>
+          </v-row>
+<!--          <v-row justify="center">-->
+<!--            <input type="file" accept="image/*" id="file-input" capture=""/>-->
+<!--          </v-row>-->
+
+<!-- The vuetify file input may not have Camera capture capability -->
+          <v-row justify="center">
+            <v-col cols="5">
+              <v-file-input
+                accept="image/*"
+                id="file-input2"
+                capture=""
+                label="Capture"
+                filled prepend-icon="mdi-camera"
+                dense
+              ></v-file-input>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <b>{{
+              this.location.latitude
+                ? `Lat:${this.location.latitude} | Long: ${this.location.longitude}`
+                : "Getting location..."
+            }}</b
+            ><br /><br />
+            Time of submission: <br />
+            <b>{{ currTime ? getDateTime(currTime) : "" }}</b>
+          </v-row>
+          <v-row justify="center">
+            <v-btn
+                color="success"
+                class="mr-4"
+                @click="submit"
+              >
+                Submit
+            </v-btn>
+          </v-row>
+          <v-row justify="center">
+            <canvas id="canvas" width="320" height="240"></canvas>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-form>
+  </v-container>
 </template>
 
 <script>
@@ -41,7 +78,7 @@ const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default {
   name: "entry-form",
   data: () => ({
-    temperature: null,
+    temperature: 37,
     location: {},
     currTime: null,
     file: null
@@ -66,9 +103,6 @@ export default {
         console.log("Geo Location not supported by browser");
       }
     },
-    handleFileInput() {
-      this.file = this.$refs.file.files[0];
-    },
     // function that retrieves the position
     showPosition(position) {
       this.location = {
@@ -80,7 +114,8 @@ export default {
       const method = "post";
       const url = "/api/entries";
       const headers = {
-        Authorization: "Basic bmluZzpjc3k0YnFmNQ=="
+        Authorization: "Basic bmluZzpjc3k0YnFmNQ==",
+        "Content-Type": "multipart/form-data"
       };
       const data = new FormData();
       data.append("temperature", parseFloat(this.temperature));
