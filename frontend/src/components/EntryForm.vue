@@ -41,7 +41,6 @@ const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default {
   name: "entry-form",
   data: () => ({
-<<<<<<< HEAD
     temperature: null,
     location: {},
     currTime: null,
@@ -95,15 +94,6 @@ export default {
   mounted() {
     this.getLocation();
     this.currTime = new Date(Date.now());
-=======
-    temperature: null
-  }),
-  methods: {
-    submit() {
-      console.log("Submit");
-    }
-  },
-  mounted() {
 
     const getImage = (files) => {
 
@@ -127,7 +117,6 @@ export default {
 
     const fileInput = document.getElementById('file-input');
     fileInput.addEventListener('change', (e) => getImage(e.target.files));
->>>>>>> Add image capture and display in entry form
   }
 };
 </script>
