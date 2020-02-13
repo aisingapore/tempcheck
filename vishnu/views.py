@@ -1,9 +1,32 @@
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions, mixins, generics
 from rest_framework.response import Response
 
 from knox.models import AuthToken
 
-from .serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer
+from .models import Entry
+from .serializers import EntrySerializer, CreateUserSerializer, UserSerializer, LoginUserSerializer
+# pylint: disable=no-member
+
+class ImmutableViewSet(mixins.CreateModelMixin,
+                                mixins.ListModelMixin,
+                                mixins.RetrieveModelMixin,
+                                viewsets.GenericViewSet):
+    """
+    A viewset that provides `retrieve`, `create`, and `list` actions.
+
+    To use it, override the class and set the `.queryset` and
+    `.serializer_class` attributes.
+    """
+class EntryViewSet(ImmutableViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = EntrySerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Entry.objects.filter(owner=user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class RegistrationAPI(generics.GenericAPIView):
     serializer_class = CreateUserSerializer
