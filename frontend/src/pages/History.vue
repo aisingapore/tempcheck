@@ -19,14 +19,17 @@
         :location="{ lat: item.lat, long: item.long }"
       />
     </div>
-    <v-btn
-      text
-      color="grey accent-4"
-      text-color="white"
-      class="mr-4 white--text"
-      @click="signOut"
-      >Log Out
-    </v-btn>
+    <v-row>
+      <v-col>
+        <v-btn
+          text
+          outlined color="indigo"
+          class="mr-4 white--text"
+          @click="signOut"
+          >Log Out
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
