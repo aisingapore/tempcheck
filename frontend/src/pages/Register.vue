@@ -13,7 +13,7 @@
               style="padding-left: 16px; padding-right: 16px; padding-bottom: 16px;"
               min-width="400"
             >
-              <h3>Register your Details!</h3>
+              <h3 class="my-4">Register your Details!</h3>
               <v-form ref="form" v-model="valid" :lazy-validation="lazy">
                 <v-text-field
                   color="orange accent-4"
@@ -50,13 +50,16 @@
                   @click="register"
                   >Register
                 </v-btn>
-                <v-btn
-                  color="grey accent-4"
-                  text-color="white"
-                  class="mr-4 white--text"
-                  @click="goToSignIn"
-                  >Go to Sign In?
-                </v-btn>
+                <v-row justify="center" class="mt-8">
+                  <v-btn
+                    text
+                    color="grey accent-4"
+                    text-color="white"
+                    class="mr-4 white--text"
+                    @click="goToSignIn"
+                    >Already registered?<br/>Sign In here
+                  </v-btn>
+                </v-row>
               </v-form>
             </v-card>
           </v-row>
@@ -97,7 +100,7 @@ export default {
       }
     },
     goToSignIn() {
-      this.$router.push("/signin");
+      this.$router.push("/");
     },
     save: async function() {
       const data = {
