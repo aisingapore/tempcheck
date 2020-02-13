@@ -66,5 +66,6 @@ export default {
 .entry-list {
   display: flex;
   flex-wrap: wrap-reverse;
+  flex-direction: row-reverse;
 }
 </style>
