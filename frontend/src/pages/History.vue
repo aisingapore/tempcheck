@@ -40,7 +40,7 @@ export default {
     async getEntries() {
       const url = "/api/entries";
       const headers = {
-        Authorization: "Basic bmluZzpjc3k0YnFmNQ=="
+        Authorization: `Token ${localStorage.getItem("token")}`
       };
       try {
         const response = await axios.get(url, { headers });
@@ -56,19 +56,16 @@ export default {
   },
   mounted() {
     this.getEntries();
+    console.log("VUE_APP_GOOGLE_MAPS_KEY", process.env.VUE_APP_GOOGLE_MAPS_KEY);
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.btn-new-entry {
-  background-color: lightgrey;
-  font-size: 12px;
-}
-
 .entry-list {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap-reverse;
+  flex-direction: row-reverse;
 }
 </style>

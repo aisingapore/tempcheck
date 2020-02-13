@@ -57,7 +57,7 @@
                     text-color="white"
                     class="mr-4 white--text"
                     @click="goToSignIn"
-                    >Already registered?<br/>Sign In here
+                    >Already registered?<br />Sign In here
                   </v-btn>
                 </v-row>
               </v-form>
@@ -84,8 +84,8 @@ export default {
       password: "",
       showPassword: false,
       snackbar: {
-          show: false,
-          message: null,
+        show: false,
+        message: null
       },
       rules: {
         required: value => !!value || "Required."
@@ -115,7 +115,7 @@ export default {
         console.log(response.data);
         this.goToHistory();
       } catch (err) {
-        this.snackbar.message = "Error registering!"
+        this.snackbar.message = "Error registering!";
         this.snackbar.show = true;
         console.log("Error:", err);
       }
