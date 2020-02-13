@@ -19,6 +19,14 @@
         :location="{ lat: item.lat, long: item.long }"
       />
     </div>
+    <v-btn
+      text
+      color="grey accent-4"
+      text-color="white"
+      class="mr-4 white--text"
+      @click="signOut"
+      >Log Out
+    </v-btn>
   </v-container>
 </template>
 
@@ -52,6 +60,10 @@ export default {
     },
     goToNewEntry() {
       this.$router.push("/new");
+    },
+    signOut() {
+      localStorage.removeItem("token");
+      this.$router.push("/");
     }
   },
   mounted() {

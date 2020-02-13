@@ -57,7 +57,7 @@
                     text-color="white"
                     class="mr-4 white--text"
                     @click="goToRegister"
-                    >No account?<br/>
+                    >No account?<br />
                     Register here
                   </v-btn>
                 </v-row>
@@ -80,13 +80,16 @@ export default {
       lazy: false,
       valid: false,
       invalidCredentials: false,
-      email: "",
+      email:
+        localStorage.getItem("email") !== null
+          ? localStorage.getItem("email")
+          : "",
       password: "",
       showPassword: false,
       snackbar: {
-                show: false,
-                message: null,
-            },
+        show: false,
+        message: null
+      },
       rules: {
         required: value => !!value || "Required."
       }
@@ -124,13 +127,14 @@ export default {
 
         if (token) {
           localStorage.setItem("token", token);
+          localStorage.setItem("email", this.email);
           this.goToHome();
         } else {
           this.invalidCredentials = true;
           // console.log("No token in headers", headers);
         }
       } catch (err) {
-        this.snackbar.message = "Error logging in!"
+        this.snackbar.message = "Error logging in!";
         this.snackbar.show = true;
         console.log("Error:", err);
       }
