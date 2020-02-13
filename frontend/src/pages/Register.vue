@@ -113,8 +113,13 @@ export default {
       try {
         console.log(data);
         const response = await axios.post(url, data);
-        console.log(response.data);
-        this.goToHistory();
+        const token = response.data.token;
+
+        if (token) {
+          localStorage.setItem("token", token);
+          localStorage.setItem("email", this.email);
+          this.goToHistory();
+        }
       } catch (err) {
         // console.log(err);
         var message = Object.values(err)[2].data.email || Object.values(err)[2].data.non_field_errors;

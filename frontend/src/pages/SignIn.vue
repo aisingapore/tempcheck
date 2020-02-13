@@ -123,8 +123,6 @@ export default {
 
         const token = response.data.token;
 
-        // extract token and put in session
-
         if (token) {
           localStorage.setItem("token", token);
           localStorage.setItem("email", this.email);

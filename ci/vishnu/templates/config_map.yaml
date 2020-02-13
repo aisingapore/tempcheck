@@ -5,3 +5,5 @@ metadata:
 data:
   # Configuration values can be set as key-value properties
   DUMMY_KEY: dummy_value
+  VUE_APP_GOOGLE_MAPS_KEY: ""
+  DOMAIN_LIST: ""

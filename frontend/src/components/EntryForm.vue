@@ -58,7 +58,7 @@
 
 <script>
 import axios from "axios";
-import PictureInput from "vue-picture-input";
+import PhotoInput from "./PhotoInput";
 const months = [
   "Jan",
   "Feb",
@@ -78,7 +78,7 @@ const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default {
   name: "entry-form",
   components: {
-    "vue-picture-input": PictureInput
+    "vue-picture-input": PhotoInput
   },
   data: () => ({
     temperature: 37,
@@ -133,11 +133,11 @@ export default {
         "Long: " +
         geolocation.longitude;
     },
-    submit() {
+    async submit() {
       const method = "post";
       const url = "/api/entries";
       const headers = {
-        Authorization: "Basic bmluZzpjc3k0YnFmNQ==",
+        Authorization: `Token ${localStorage.getItem("token")}`,
         "Content-Type": "multipart/form-data"
       };
       const data = new FormData();
@@ -146,33 +146,14 @@ export default {
       data.append("lat", this.geolocation.latitude);
       data.append("file", this.file);
 
-      axios({ method, url, headers, data });
+      const response = await axios({ method, url, headers, data });
+      if (response.data) {
+        this.$router.push("/history");
+      }
     }
   },
   mounted() {
     this.getLocation();
-
-    const getImage = files => {
-      function draw() {
-        var canvas = document.getElementById("canvas");
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
-      }
-
-      function failed() {
-        console.error("The provided file couldn't be loaded as an Image media");
-      }
-
-      console.log("Images", files);
-      const file = files[0];
-      var img = new Image();
-      img.onload = draw;
-      img.onerror = failed;
-      img.src = URL.createObjectURL(file);
-    };
-
-    const fileInput = document.getElementById("file-input");
-    fileInput.addEventListener("change", e => getImage(e.target.files));
   },
   computed: {
     location: function() {
