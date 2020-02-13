@@ -51,7 +51,7 @@ export default {
       }
     },
     goToNewEntry() {
-      this.$router.push("/entries/new");
+      this.$router.push("/new");
     }
   },
   mounted() {
