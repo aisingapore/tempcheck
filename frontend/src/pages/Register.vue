@@ -110,15 +110,15 @@ export default {
         console.log(data);
         const response = await axios.post(url, data);
         console.log(response.data);
-        this.goToHome();
+        this.goToHistory();
       } catch (err) {
         this.snackbar.message = "Error registering!"
         this.snackbar.show = true;
         console.log("Error:", err);
       }
     },
-    goToHome() {
-      this.$router.push("/");
+    goToHistory() {
+      this.$router.push("/history");
     },
     onType: function() {
       this.invalidCredentials = false;
