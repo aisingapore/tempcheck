@@ -25,8 +25,28 @@
           </v-row>
         </v-container>
       </v-card-title>
-
-      <v-card-text> </v-card-text>
+      <div>
+        <GmapMap
+          :center="{
+            lat: parseFloat(location.lat),
+            lng: parseFloat(location.long)
+          }"
+          :zoom="15"
+          map-type-id="roadmap"
+          style="width: 100%; height: 40%"
+          :options="{
+            zoomControl: false,
+            mapTypeControl: false,
+            scaleControl: false,
+            streetViewControl: false,
+            rotateControl: false,
+            fullscreenControl: false,
+            disableDefaultUi: false,
+            draggable: false,
+            disableDefaultUI: true
+          }"
+        />
+      </div>
     </v-card>
   </v-dialog>
 </template>
@@ -51,6 +71,9 @@ const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default {
   name: "entry",
+  data: () => ({
+    dialog: false
+  }),
   computed: {
     getTime() {
       const hour = this.timeTaken.getHours();
@@ -75,6 +98,13 @@ export default {
     timeTaken: {
       type: Date,
       default: () => new Date("12-12-2019 11:22:33Z")
+    },
+    location: {
+      type: Object,
+      default: () => ({
+        lat: 0,
+        long: 0
+      })
     }
   }
 };
