@@ -1,9 +1,16 @@
-import Vue from 'vue'
-import App from './App.vue'
-import './registerServiceWorker'
+import Vue from "vue";
+import App from "./App.vue";
+import VueRouter from "vue-router";
 
-Vue.config.productionTip = false
+import router from "./router";
+import "./registerServiceWorker";
+import vuetify from "./plugins/vuetify";
+
+Vue.config.productionTip = false;
+Vue.use(VueRouter);
 
 new Vue({
   render: h => h(App),
-}).$mount('#app')
+  vuetify,
+  router
+}).$mount("#app");
