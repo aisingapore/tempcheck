@@ -30,6 +30,7 @@
                 accept="image/*"
                 size="10"
                 ref="fileInput"
+                capture="environment"
                 @change="fileUpload"
                 :custom-strings="{
                   tap: 'Tap to <br />upload image',
