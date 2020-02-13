@@ -36,6 +36,8 @@ ALLOWED_HOSTS = [app_hostname, gethostbyname(
     app_hostname), "localhost", "loa.ai3.aisingapore.org",
     "127.0.0.1", "mighty-snake-20.localtunnel.me"]
 
+# Config to change acceptable domain names
+DOMAIN_LIST = ["gmail.com", "nus.edu.sg",]
 
 # Application definition
 
@@ -51,8 +53,13 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework.authtoken',
     'storages',
-    'vishnu.apps.VishnuConfig'
+    'vishnu.apps.VishnuConfig',
+    'knox'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
 
 # Enable below later
 # REST_FRAMEWORK = {
