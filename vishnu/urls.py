@@ -19,7 +19,6 @@ from django.views.generic import TemplateView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from .routers import router
-from . import views
 from .views import RegistrationAPI, LoginAPI, UserAPI
 
 urlpatterns = [
@@ -33,9 +32,9 @@ urlpatterns = [
          ),
 
     path('api/auth/', include('knox.urls')),
-    path("api/auth/register", views.RegistrationAPI.as_view()),
-    path("api/auth/login", views.LoginAPI.as_view()),
-    path("api/auth/user", views.UserAPI.as_view()),
+    path("api/auth/register", RegistrationAPI.as_view()),
+    path("api/auth/login", LoginAPI.as_view()),
+    path("api/auth/user", UserAPI.as_view()),
 ]
 
 # Required to serve static files in prod. Workaround for now

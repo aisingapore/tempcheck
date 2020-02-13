@@ -2,7 +2,7 @@ const BundleTracker = require("webpack-bundle-tracker");
 
 module.exports = {
   publicPath:
-    process.env.NODE_ENV == "development" ? "http://0.0.0.0:8080/" : "/",
+    process.env.NODE_ENV === "development" ? "http://0.0.0.0:8080/" : "/",
   outputDir: "./dist/",
   assetsDir: "static",
 
@@ -23,5 +23,7 @@ module.exports = {
       .watchOptions({ poll: 1000 })
       .https(false)
       .headers({ "Access-Control-Allow-Origin": ["*"] });
-  }
+  },
+
+  transpileDependencies: ["vuetify"]
 };

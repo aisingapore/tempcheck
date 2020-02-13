@@ -97,7 +97,7 @@ export default {
       }
     },
     goToHome() {
-      this.$router.push("/");
+      this.$router.push("/history");
     },
     goToRegister() {
       this.$router.push("/register");

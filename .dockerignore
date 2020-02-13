@@ -1,5 +1,4 @@
 .DS_Store
-uploads
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -11,6 +10,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+build/
 develop-eggs/
 dist/
 downloads/
@@ -107,12 +107,13 @@ venv.bak/
 .mypy_cache/
 
 # Other likely dirs that should not be committed
-/data
+data/
 model/
 models/
 
-.polyaxon/.polyaxonxp
+.polyaxon
+outputs/
 
-/static
-frontend/webpack-stats.json
-node_modules
+frontend/node_modules
+frontend/public
+frontend/src

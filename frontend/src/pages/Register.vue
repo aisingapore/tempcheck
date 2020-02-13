@@ -118,7 +118,7 @@ export default {
       }
     },
     goToHome() {
-      this.$router.push("/signin");
+      this.$router.push("/");
     },
     onType: function() {
       this.invalidCredentials = false;
