@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="100%">
+  <v-dialog v-model="dialog">
     <template v-slot:activator="{ on }">
       <div class="entry-container" v-on="on">
         <span class="date-time">{{ getTime }}, {{ getDate }}</span
@@ -8,7 +8,7 @@
         <span class="deg-c">&deg;C</span>
       </div>
     </template>
-    <v-card>
+    <v-card ma-0>
       <v-card-title class="headline yellow lighten-4">
         <v-container>
           <v-row class="mt-n6 mb-n3">
@@ -25,7 +25,7 @@
           </v-row>
         </v-container>
       </v-card-title>
-      <div>
+      <div v-if="dialog">
         <GmapMap
           :center="{
             lat: parseFloat(location.lat),
