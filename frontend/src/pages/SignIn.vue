@@ -3,6 +3,10 @@
     <div class="md-layout">
       <div class="md-layout-item md-medium-size-100 md-xsmall-size-100">
         <v-container>
+          <v-snackbar v-model="snackbar.show" color="error" top>
+            {{ snackbar.message }}
+            <v-btn text @click="snackbar.show = false">Close</v-btn>
+          </v-snackbar>
           <v-row align="center">
             <v-card
               class="mx-auto"
@@ -75,6 +79,10 @@ export default {
       email: "",
       password: "",
       showPassword: false,
+      snackbar: {
+                show: false,
+                message: null,
+            },
       rules: {
         required: value => !!value || "Required."
       }
@@ -118,8 +126,10 @@ export default {
           // console.log("No token in headers", headers);
         }
       } catch (err) {
+        this.snackbar.message = "Error logging in!"
+        this.snackbar.show = true;
         console.log("Error:", err);
-      }
+      } 
     },
     onType: function() {
       this.invalidCredentials = false;
