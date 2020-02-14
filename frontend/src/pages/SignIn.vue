@@ -42,6 +42,8 @@
                 <v-p v-if="invalidCredentials" class="errorMsg">
                   Invalid credentials
                 </v-p>
+                <v-checkbox v-model="checkbox" :label="`Remember Me`">
+                </v-checkbox>
                 <v-btn
                   :disabled="!valid"
                   color="orange accent-4"
@@ -80,9 +82,13 @@ export default {
       lazy: false,
       valid: false,
       invalidCredentials: false,
-      email: "",
+      email:
+        localStorage.getItem("email") !== null
+          ? localStorage.getItem("email")
+          : "",
       password: "",
       showPassword: false,
+      checkbox: true,
       snackbar: {
         show: false,
         message: null
@@ -120,10 +126,11 @@ export default {
 
         const token = response.data.token;
 
-        // extract token and put in session
-
         if (token) {
           localStorage.setItem("token", token);
+          if(this.checkbox === true){
+            localStorage.setItem("email", this.email);
+            }
           this.goToHome();
         } else {
           this.invalidCredentials = true;
