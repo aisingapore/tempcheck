@@ -21,6 +21,7 @@
                   v-model="email"
                   name="input-10-2"
                   label="E-mail"
+                  hint="Use your organisation's email for registration"
                   value
                   v-on:keyup="onType"
                   v-on:keyup.enter="validate"
@@ -112,10 +113,19 @@ export default {
       try {
         console.log(data);
         const response = await axios.post(url, data);
-        console.log(response.data);
-        this.goToHistory();
+        const token = response.data.token;
+
+        if (token) {
+          localStorage.setItem("token", token);
+          localStorage.setItem("email", this.email);
+          this.goToHistory();
+        }
       } catch (err) {
-        this.snackbar.message = "Error registering!";
+        // console.log(err);
+        var message =
+          Object.values(err)[2].data.email ||
+          Object.values(err)[2].data.non_field_errors;
+        this.snackbar.message = message[0].replace(/^\w/, c => c.toUpperCase());
         this.snackbar.show = true;
         console.log("Error:", err);
       }

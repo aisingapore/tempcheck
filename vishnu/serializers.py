@@ -37,7 +37,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
         Check that only certain domains are allowed to register
         '''
 
-        domain_list = settings.DOMAIN_LIST
+        domain_list = getattr(settings, "DOMAIN_LIST", [])
         email = data['email']
         domain = email.split('@')[1]
         if domain not in domain_list:

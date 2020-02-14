@@ -35,8 +35,8 @@
           <v-row class="mt-n6 pb-2">
             <v-col>
               <vue-picture-input
-                height="300"
-                width="300"
+                height="200"
+                width="200"
                 accept="image/*"
                 size="10"
                 ref="fileInput"
