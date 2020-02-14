@@ -10,6 +10,8 @@
           <v-row justify="center" class="mt-4">
             <v-col cols="10" xs="12">
               <v-slider
+                :color="getSliderColour()"
+                track-color="grey"
                 v-model="temperature"
                 min="35"
                 max="39"
@@ -43,7 +45,7 @@
                 capture="environment"
                 @change="fileUpload"
                 :custom-strings="{
-                  tap: 'Tap to <br />upload image',
+                  tap: 'Tap to take photo<br /> of temperature reading',
                   drag: 'Drag to upload image'
                 }"
               />
@@ -59,7 +61,12 @@
           </v-row>
 
           <v-row justify="center" class="mt-4">
-            <v-btn color="success" @click="submit" :loading="loading">
+            <v-btn
+              :color="getSliderColour()"
+              @click="submit"
+              :loading="loading"
+              class="font-color-white"
+            >
               Submit
             </v-btn>
           </v-row>
@@ -168,6 +175,19 @@ export default {
         console.log("Geo Location not supported by browser");
       }
     },
+    getSliderColour() {
+      const cutOffs = [37.1, 37.6];
+      const colours = ["green", "orange", "red"];
+      // one more colour than cutoffs
+
+      for (let i = 0; i < cutOffs.length; i++) {
+        if (parseFloat(this.temperature) < cutOffs[i]) {
+          return colours[i];
+        }
+      }
+
+      return colours[cutOffs.length];
+    },
     increment() {
       this.temperature += 0.1;
     },
@@ -179,12 +199,9 @@ export default {
       };
       console.log("Location", geolocation);
       this.geolocation = geolocation;
-      this.locationMsg =
-        "Lat: " +
-        geolocation.latitude +
-        " | " +
-        "Long: " +
-        geolocation.longitude;
+      this.locationMsg = `Your location: (${geolocation.latitude.toFixed(
+        2
+      )}, ${geolocation.longitude.toFixed(2)})`;
     },
     async submit() {
       if (!this.valid()) {
@@ -276,5 +293,9 @@ export default {
 #entry-form .v-slider__thumb-label {
   font-size: 1em !important;
   font-weight: bold;
+}
+
+.font-color-white {
+  color: white !important;
 }
 </style>
