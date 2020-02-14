@@ -42,6 +42,8 @@
                 <v-p v-if="invalidCredentials" class="errorMsg">
                   Invalid credentials
                 </v-p>
+                <v-checkbox v-model="checkbox" :label="`Remember Me`">
+                </v-checkbox>
                 <v-btn
                   :disabled="!valid"
                   color="orange accent-4"
@@ -86,6 +88,7 @@ export default {
           : "",
       password: "",
       showPassword: false,
+      checkbox: true,
       snackbar: {
         show: false,
         message: null
@@ -125,7 +128,9 @@ export default {
 
         if (token) {
           localStorage.setItem("token", token);
-          localStorage.setItem("email", this.email);
+          if(this.checkbox === true){
+            localStorage.setItem("email", this.email);
+            }
           this.goToHome();
         } else {
           this.invalidCredentials = true;
