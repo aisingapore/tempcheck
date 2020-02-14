@@ -1,28 +1,38 @@
 <template>
-  <v-container fluid>
+  <v-container fluid id="entry-form">
+    <v-snackbar v-model="errorSnackbar.show" color="error" top>
+      <span v-html="errorSnackbar.message" />
+      <v-btn text @click="closeSnackbar">Close</v-btn>
+    </v-snackbar>
     <v-form>
       <v-row justify="center">
         <v-col cols="12">
-          <v-row justify="center" class="pa-0 ma-0">
-            <v-col cols="1" class="pa-0 ma-0">
-              <v-icon>mdi-thermometer-lines</v-icon>
-            </v-col>
-          </v-row>
-          <v-row justify="center" class="mt-n3">
+          <v-row justify="center" class="mt-4">
             <v-col cols="10" xs="12">
               <v-slider
                 v-model="temperature"
                 min="35"
                 max="39"
                 thumb-label="always"
+                thumb-size="43"
                 step="0.1"
-                prepend-icon="mdi-minus"
-                append-icon="mdi-plus"
-              ></v-slider>
+              >
+                <template v-slot:prepend>
+                  <v-icon @click="decrement">
+                    mdi-minus
+                  </v-icon>
+                </template>
+
+                <template v-slot:append>
+                  <v-icon @click="increment">
+                    mdi-plus
+                  </v-icon>
+                </template>
+              </v-slider>
             </v-col>
           </v-row>
-          <!-- The vuetify file input may not have Camera capture capability -->
-          <v-row class="mt-n3">
+
+          <v-row class="mt-n6 pb-2">
             <v-col>
               <vue-picture-input
                 height="300"
@@ -39,12 +49,15 @@
               />
             </v-col>
           </v-row>
+
           <v-row justify="center" class="pa-1">
             <b>{{ location }}</b>
           </v-row>
+
           <v-row justify="center" class="pa-1">
             <b>{{ currentTime }}</b>
           </v-row>
+
           <v-row justify="center" class="mt-4">
             <v-btn color="success" @click="submit">
               Submit
@@ -83,10 +96,23 @@ export default {
   data: () => ({
     temperature: 37,
     geolocation: {},
+    errorSnackbar: {
+      show: false,
+      message: null
+    },
     file: null,
     locationMsg: "Getting location"
   }),
   methods: {
+    closeSnackbar() {
+      this.errorSnackbar = {
+        show: false,
+        message: null
+      };
+    },
+    decrement() {
+      this.temperature -= 0.1;
+    },
     fileUpload() {
       console.log("fileInput", this.$refs.fileInput);
       this.file = this.$refs.fileInput.file;
@@ -118,6 +144,9 @@ export default {
         console.log("Geo Location not supported by browser");
       }
     },
+    increment() {
+      this.temperature += 0.1;
+    },
     // function that retrieves the position
     showPosition(position) {
       const geolocation = {
@@ -134,6 +163,9 @@ export default {
         geolocation.longitude;
     },
     async submit() {
+      if (!this.valid()) {
+        return;
+      }
       const method = "post";
       const url = "/api/entries";
       const headers = {
@@ -146,14 +178,51 @@ export default {
       data.append("lat", this.geolocation.latitude);
       data.append("file", this.file);
 
-      const response = await axios({ method, url, headers, data });
-      if (response.data) {
+      try {
+        const response = await axios({ method, url, headers, data });
+        console.log(response.data);
         this.$router.push("/history");
+      } catch (error) {
+        const errors = error.response.data;
+        this.errorSnackbar = {
+          show: true,
+          message:
+            "Errors from server: <br />" +
+            Object.keys(errors)
+              .map(k => `${k}: ${errors[k]}`)
+              .join("<br />")
+        };
       }
+    },
+    valid() {
+      const errors = [];
+
+      if (!this.file) {
+        errors.push("Please upload a valid image.");
+      }
+
+      if (!this.geolocation.longitude || !this.geolocation.latitude) {
+        errors.push("Please provide your location through location services.");
+      }
+
+      if (isNaN(this.temperature)) {
+        errors.push("Please provide a valid temperature.");
+      }
+
+      if (errors.length === 0) {
+        return true;
+      }
+
+      this.errorSnackbar = {
+        message: errors.join("<br />"),
+        show: true
+      };
+      return false;
     }
   },
   mounted() {
     this.getLocation();
+    setInterval(this.getLocation, 5000);
   },
   computed: {
     location: function() {
@@ -176,23 +245,9 @@ export default {
   }
 };
 </script>
-<style scoped>
-form > input {
-  border: 1px solid grey;
-  margin: 5px 0px;
-}
-
-.form-input {
-  background-color: linen;
-  width: 60%;
-  display: block;
-  margin: 10px auto;
-  padding: 8px 20px;
-}
-
-.btn-submit {
-  border: 1px solid darkgrey;
-  margin-top: 10px;
-  margin-bottom: 5px;
+<style>
+#entry-form .v-slider__thumb-label {
+  font-size: 1em !important;
+  font-weight: bold;
 }
 </style>
