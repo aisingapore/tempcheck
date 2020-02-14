@@ -5,6 +5,15 @@ module.exports = {
     process.env.NODE_ENV === "development" ? "http://0.0.0.0:8080/" : "/",
   outputDir: "./dist/",
   assetsDir: "static",
+  pwa: {
+    name: "Temperature recorder",
+    appleMobileWebAppCapable: 'yes',
+    iconPaths: {
+      favicon32: 'static/icons/favicon-32x32.png',
+      favicon16: 'static/icons/favicon-16x16.png',
+      appleTouchIcon: 'static/icons/apple-touch-icon-152x152.png'
+    }
+  },
 
   chainWebpack: config => {
     config.optimization.splitChunks(false);
