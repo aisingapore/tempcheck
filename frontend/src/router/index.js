@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
   ) {
     console.log("User already signed in. Redirecting to dashboard");
     next({
-      path: "/new"
+      path: "/history"
     });
   } else {
     next();

@@ -34,7 +34,7 @@ DEBUG = True
 app_hostname = gethostname()
 ALLOWED_HOSTS = [app_hostname, gethostbyname(
     app_hostname), "localhost", "loa.ai3.aisingapore.org",
-    "127.0.0.1", "spotty-swan-75.localtunnel.me"]
+    "127.0.0.1"]
 
 # Config to change acceptable domain names
 DOMAIN_LIST = os.environ.get("DOMAIN_NAMES")

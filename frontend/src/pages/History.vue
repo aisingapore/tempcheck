@@ -2,8 +2,8 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <h1>History</h1>
         <h2>{{ name }}</h2>
+        <h1>History</h1>
       </v-col>
     </v-row>
     <v-row class="mt-n3">
