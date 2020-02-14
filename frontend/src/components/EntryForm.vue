@@ -1,5 +1,9 @@
 <template>
   <v-container fluid id="entry-form">
+    <v-snackbar v-model="errorSnackbar.show" color="error" top>
+      <span v-html="errorSnackbar.message" />
+      <v-btn text @click="closeSnackbar">Close</v-btn>
+    </v-snackbar>
     <v-form>
       <v-row justify="center">
         <v-col cols="12">
@@ -92,10 +96,20 @@ export default {
   data: () => ({
     temperature: 37,
     geolocation: {},
+    errorSnackbar: {
+      show: false,
+      message: null
+    },
     file: null,
     locationMsg: "Getting location"
   }),
   methods: {
+    closeSnackbar() {
+      this.errorSnackbar = {
+        show: false,
+        message: null
+      };
+    },
     decrement() {
       this.temperature -= 0.1;
     },
@@ -149,6 +163,9 @@ export default {
         geolocation.longitude;
     },
     async submit() {
+      if (!this.valid()) {
+        return;
+      }
       const method = "post";
       const url = "/api/entries";
       const headers = {
@@ -161,14 +178,51 @@ export default {
       data.append("lat", this.geolocation.latitude);
       data.append("file", this.file);
 
-      const response = await axios({ method, url, headers, data });
-      if (response.data) {
+      try {
+        const response = await axios({ method, url, headers, data });
+        console.log(response.data);
         this.$router.push("/history");
+      } catch (error) {
+        const errors = error.response.data;
+        this.errorSnackbar = {
+          show: true,
+          message:
+            "Errors from server: <br />" +
+            Object.keys(errors)
+              .map(k => `${k}: ${errors[k]}`)
+              .join("<br />")
+        };
       }
+    },
+    valid() {
+      const errors = [];
+
+      if (!this.file) {
+        errors.push("Please upload a valid image.");
+      }
+
+      if (!this.geolocation.longitude || !this.geolocation.latitude) {
+        errors.push("Please provide your location through location services.");
+      }
+
+      if (isNaN(this.temperature)) {
+        errors.push("Please provide a valid temperature.");
+      }
+
+      if (errors.length === 0) {
+        return true;
+      }
+
+      this.errorSnackbar = {
+        message: errors.join("<br />"),
+        show: true
+      };
+      return false;
     }
   },
   mounted() {
     this.getLocation();
+    setInterval(this.getLocation, 5000);
   },
   computed: {
     location: function() {
