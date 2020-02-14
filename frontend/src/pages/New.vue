@@ -16,7 +16,7 @@ export default {
   },
   data() {
     return {
-      name: "Ning Yu",
+      name: localStorage.getItem("email"),
       list: [
         {
           id: 1,

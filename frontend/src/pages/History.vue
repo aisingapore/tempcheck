@@ -3,6 +3,7 @@
     <v-row>
       <v-col>
         <h1>History</h1>
+        <h2>{{ name }}</h2>
       </v-col>
     </v-row>
     <v-row class="mt-n3">
@@ -44,7 +45,7 @@ export default {
   },
   data() {
     return {
-      name: "Ning Yu",
+      name: localStorage.getItem("email"),
       list: []
     };
   },
