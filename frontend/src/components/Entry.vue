@@ -85,9 +85,11 @@ const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default {
   name: "entry",
-  data: () => ({
-    dialog: false
-  }),
+  data() {
+    return {
+      dialog: false
+    };
+  },
   computed: {
     getTime() {
       const hour = this.timeTaken.getHours();

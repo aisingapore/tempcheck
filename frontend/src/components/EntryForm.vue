@@ -59,7 +59,7 @@
           </v-row>
 
           <v-row justify="center" class="mt-4">
-            <v-btn color="success" @click="submit">
+            <v-btn color="success" @click="submit" :loading="loading">
               Submit
             </v-btn>
           </v-row>
@@ -101,6 +101,7 @@ export default {
       message: null
     },
     file: null,
+    loading: false,
     locationMsg: "Getting location"
   }),
   methods: {
@@ -189,6 +190,8 @@ export default {
       if (!this.valid()) {
         return;
       }
+
+      this.loading = true;
       const method = "post";
       const url = "/api/entries";
       const headers = {
@@ -204,8 +207,10 @@ export default {
       try {
         const response = await axios({ method, url, headers, data });
         console.log(response.data);
+        this.loading = false;
         this.$router.push("/history");
       } catch (error) {
+        this.loading = false;
         const errors = error.response.data;
         this.errorSnackbar = {
           show: true,
