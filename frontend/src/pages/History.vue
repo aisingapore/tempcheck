@@ -23,7 +23,8 @@
       <v-col>
         <v-btn
           text
-          outlined color="indigo"
+          outlined
+          color="indigo"
           class="mr-4 white--text"
           @click="signOut"
           >Log Out

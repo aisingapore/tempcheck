@@ -122,8 +122,10 @@ export default {
         }
       } catch (err) {
         // console.log(err);
-        var message = Object.values(err)[2].data.email || Object.values(err)[2].data.non_field_errors;
-        this.snackbar.message = message[0].replace(/^\w/, c => c.toUpperCase());;
+        var message =
+          Object.values(err)[2].data.email ||
+          Object.values(err)[2].data.non_field_errors;
+        this.snackbar.message = message[0].replace(/^\w/, c => c.toUpperCase());
         this.snackbar.show = true;
         console.log("Error:", err);
       }
