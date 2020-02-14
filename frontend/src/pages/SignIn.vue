@@ -128,9 +128,9 @@ export default {
 
         if (token) {
           localStorage.setItem("token", token);
-          if(this.checkbox === true){
+          if (this.checkbox === true) {
             localStorage.setItem("email", this.email);
-            }
+          }
           this.goToHome();
         } else {
           this.invalidCredentials = true;

@@ -59,7 +59,7 @@
           </v-row>
 
           <v-row justify="center" class="mt-4">
-            <v-btn color="success" @click="submit">
+            <v-btn color="success" @click="submit" :loading="loading">
               Submit
             </v-btn>
           </v-row>
@@ -101,6 +101,7 @@ export default {
       message: null
     },
     file: null,
+    loading: false,
     locationMsg: "Getting location"
   }),
   methods: {
@@ -114,8 +115,31 @@ export default {
       this.temperature -= 0.1;
     },
     fileUpload() {
-      console.log("fileInput", this.$refs.fileInput);
-      this.file = this.$refs.fileInput.file;
+      // getting ready to resize file - read, write onto canvas, then save
+      const width = 500;
+      const reader = new FileReader();
+      reader.readAsDataURL(this.$refs.fileInput.file);
+      reader.onload = event => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = parseInt((img.height / img.width) * width);
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          ctx.canvas.toBlob(
+            blob => {
+              this.file = new File([blob], this.$refs.fileInput.file.name, {
+                type: "image/png",
+                lastModified: Date.now()
+              });
+            },
+            "image/png",
+            0.8
+          ); // trial for file size/quality balance
+        };
+      };
     },
     getDateTime(time) {
       const hour = time.getHours();
@@ -166,6 +190,8 @@ export default {
       if (!this.valid()) {
         return;
       }
+
+      this.loading = true;
       const method = "post";
       const url = "/api/entries";
       const headers = {
@@ -181,8 +207,10 @@ export default {
       try {
         const response = await axios({ method, url, headers, data });
         console.log(response.data);
+        this.loading = false;
         this.$router.push("/history");
       } catch (error) {
+        this.loading = false;
         const errors = error.response.data;
         this.errorSnackbar = {
           show: true,
@@ -222,7 +250,6 @@ export default {
   },
   mounted() {
     this.getLocation();
-    setInterval(this.getLocation, 5000);
   },
   computed: {
     location: function() {
