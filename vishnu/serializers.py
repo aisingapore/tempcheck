@@ -40,6 +40,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
         domain_list = getattr(settings, "DOMAIN_LIST", [])
         email = data['email']
         domain = email.split('@')[1]
+        if domain_list is None:
+            raise serializers.ValidationError("Please contact your administrators to create valid domain names")
         if domain not in domain_list:
             raise serializers.ValidationError("Please enter an Email Address with a valid domain")
         return data
