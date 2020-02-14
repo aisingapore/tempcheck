@@ -37,7 +37,7 @@ ALLOWED_HOSTS = [app_hostname, gethostbyname(
     "127.0.0.1", "spotty-swan-75.localtunnel.me"]
 
 # Config to change acceptable domain names
-DOMAIN_LIST = ["gmail.com", "nus.edu.sg",]
+DOMAIN_LIST = os.environ.get("DOMAIN_NAMES")
 
 # Application definition
 
