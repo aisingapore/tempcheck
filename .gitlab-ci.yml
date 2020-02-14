@@ -33,6 +33,6 @@ deploy:
     refs:
       - deploy
   script:
-    - cd frontend && npm install && npm run build && cd ..
+    - VUE_APP_GOOGLE_MAPS_KEY=$VUE_APP_GOOGLE_MAPS_KEY cd frontend && npm install && npm run build && cd ..
     - docker login -u $ACR_USERNAME -p $ACR_KEY 100edockerregistry.azurecr.io
     - skaffold run
