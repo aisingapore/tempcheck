@@ -26,6 +26,7 @@
                   v-on:keyup.enter="validate"
                   class="input-group--focused"
                 ></v-text-field>
+                
                 <v-text-field
                   color="orange accent-4"
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -39,9 +40,6 @@
                   v-on:keyup="onType"
                   @click:append="showPassword = !showPassword"
                 ></v-text-field>
-                <v-p v-if="invalidCredentials" class="errorMsg">
-                  Invalid credentials
-                </v-p>
                 <v-checkbox v-model="checkbox" :label="`Remember Me`">
                 </v-checkbox>
                 <v-btn
@@ -51,6 +49,9 @@
                   class="mr-4 white--text"
                   @click="login"
                   >Sign In
+                  <i class="material-icons">
+                    lock_open
+                  </i>
                 </v-btn>
                 <v-row justify="center" class="mt-8">
                   <v-btn
@@ -81,7 +82,6 @@ export default {
     return {
       lazy: false,
       valid: false,
-      invalidCredentials: false,
       email:
         localStorage.getItem("email") !== null
           ? localStorage.getItem("email")
@@ -132,19 +132,13 @@ export default {
             localStorage.setItem("email", this.email);
           }
           this.goToHome();
-        } else {
-          this.invalidCredentials = true;
-          // console.log("No token in headers", headers);
-        }
+        } 
       } catch (err) {
         this.snackbar.message = "Error logging in!";
         this.snackbar.show = true;
         console.log("Error:", err);
       }
     },
-    onType: function() {
-      this.invalidCredentials = false;
-    }
   }
 };
 </script>
