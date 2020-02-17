@@ -22,7 +22,6 @@
                   name="input-10-2"
                   label="E-mail"
                   value
-                  v-on:keyup="onType"
                   v-on:keyup.enter="validate"
                   class="input-group--focused"
                 ></v-text-field>
@@ -37,7 +36,6 @@
                   label="Password"
                   value
                   v-on:keyup.enter="validate"
-                  v-on:keyup="onType"
                   @click:append="showPassword = !showPassword"
                 ></v-text-field>
                 <v-checkbox v-model="checkbox" :label="`Remember Me`">
@@ -130,6 +128,9 @@ export default {
           localStorage.setItem("token", token);
           if (this.checkbox === true) {
             localStorage.setItem("email", this.email);
+          }
+          else{
+            localStorage.removeItem("email");
           }
           this.goToHome();
         } 
