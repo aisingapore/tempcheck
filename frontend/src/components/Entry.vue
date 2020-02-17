@@ -45,7 +45,21 @@
             draggable: false,
             disableDefaultUI: true
           }"
-        />
+        >
+          <GmapCircle
+            :center="{
+              lat: parseFloat(location.lat),
+              lng: parseFloat(location.long)
+            }"
+            :options="{
+              fillColor: 'pink',
+              strokeColor: 'pink'
+            }"
+            :clickable="false"
+            :draggable="false"
+            :radius="500"
+          />
+        </GmapMap>
       </div>
     </v-card>
   </v-dialog>
@@ -71,9 +85,11 @@ const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default {
   name: "entry",
-  data: () => ({
-    dialog: false
-  }),
+  data() {
+    return {
+      dialog: false
+    };
+  },
   computed: {
     getTime() {
       const hour = this.timeTaken.getHours();

@@ -1,7 +1,7 @@
 <template>
   <div id="new-entry">
-    <h1>Hello {{ name }}</h1>
-    <h2>New Entry</h2>
+    <h1>{{ name }}</h1>
+    <h2>New Entry <v-icon>mdi-thermometer-lines</v-icon></h2>
     <entry-form />
     <button @click="goToHome">History</button>
   </div>
@@ -16,7 +16,7 @@ export default {
   },
   data() {
     return {
-      name: "Ning Yu",
+      name: localStorage.getItem("email"),
       list: [
         {
           id: 1,

@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
+        <h2>{{ name }}</h2>
         <h1>History</h1>
       </v-col>
     </v-row>
@@ -19,6 +20,18 @@
         :location="{ lat: item.lat, long: item.long }"
       />
     </div>
+    <v-row>
+      <v-col>
+        <v-btn
+          text
+          outlined
+          color="indigo"
+          class="mr-4 white--text"
+          @click="signOut"
+          >Log Out
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -32,7 +45,7 @@ export default {
   },
   data() {
     return {
-      name: "Ning Yu",
+      name: localStorage.getItem("email"),
       list: []
     };
   },
@@ -52,6 +65,10 @@ export default {
     },
     goToNewEntry() {
       this.$router.push("/new");
+    },
+    signOut() {
+      localStorage.removeItem("token");
+      this.$router.push("/");
     }
   },
   mounted() {
