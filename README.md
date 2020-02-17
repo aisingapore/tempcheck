@@ -97,6 +97,27 @@ and
 `python manage.py migrate`
 
 
+### Setup report generation
+
+Update `.env` with the follow values:
+```
+MANDRILL_API_KEY=
+
+REPORT_SECONDS=
+REPORT_MINUTES=
+REPORT_HOURS=
+REPORT_DAYS=
+
+REPORT_EMAIL_SUBJECT=
+REPORT_FROM_EMAIL=
+REPORT_FROM_NAME=
+REPORT_TO_EMAIL=
+REPORT_TO_NAME=
+```
+* Report frequency is "Cron" style expressions. Refer to more information [here](https://apscheduler.readthedocs.io/en/stable/modules/triggers/cron.html).
+* `REPORT_TO_EMAIL` and `REPORT_TO_NAME` are comma seperated values e.g. `test@gmail.com, test2@gmail.com`.
+
+
 ## Deployment
 
 
