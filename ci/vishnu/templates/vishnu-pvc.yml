@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "vishnu.pvc" . }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: "aks-managed-retain"
+  resources:
+    requests:
+      storage: 20Gi
