@@ -11,7 +11,7 @@ from vishnu.models import Entry
 logger = logging.getLogger('vishnu.scheduler')
 
 
-def generate_report():
+def generate_report(daily_submission: str, interval: dict):
     """Generate report
     """
     report_dict = {
@@ -53,17 +53,22 @@ def send_report(report_dict: dict):
 
 def start_scheduler():
     config = {
-        'second': environ.get('REPORT_SECONDS', '') or None,
-        'minute': environ.get('REPORT_MINUTES', '') or None,
-        'hour': environ.get('REPORT_HOURS', '') or None,
-        'day': environ.get('REPORT_DAYS', '') or None
+        'seconds': int(environ.get('REPORT_INTERVAL_SECONDS', 0) or 0),
+        'minutes': int(environ.get('REPORT_INTERVAL_MINUTES', 0) or 0),
+        'hours': int(environ.get('REPORT_INTERVAL_HOURS', 0) or 0),
+        'days': int(environ.get('REPORT_INTERVAL_DAYS', 0) or 0)
+    }
+
+    args = {
+        'daily_submission': environ.get('REPORT_EXPECTED_DAILY', '1'),
+        'interval': config
     }
 
     logger.info(f'Scheduler Config:\n{config}')
 
     if any(config.values()):
         scheduler = BackgroundScheduler()
-        scheduler.add_job(generate_report, 'cron', **config)
+        scheduler.add_job(generate_report, 'interval', kwargs=args, **config)
         scheduler.start()
     else:
         logger.info('Configuration not created for report scheduler')
