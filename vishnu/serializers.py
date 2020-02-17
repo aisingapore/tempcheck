@@ -44,8 +44,6 @@ class CreateUserSerializer(serializers.ModelSerializer):
         domain = email.split('@')[1]
         if domain_list is None:
             logging.warning('Please contact your administrators to create valid domain names')
-            raise serializers.ValidationError("Please enter an Email Address with a valid domain")
-
         else: 
             if domain not in domain_list:
                 raise serializers.ValidationError("Please enter an Email Address with a valid domain")
