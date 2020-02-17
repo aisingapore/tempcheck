@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 from .models import Entry, User
 
+import logging
+
 class EntrySerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
@@ -37,11 +39,14 @@ class CreateUserSerializer(serializers.ModelSerializer):
         Check that only certain domains are allowed to register
         '''
 
-        domain_list = getattr(settings, "DOMAIN_LIST", [])
+        domain_list = getattr(settings, "DOMAIN_LIST")
         email = data['email']
         domain = email.split('@')[1]
-        if domain not in domain_list:
-            raise serializers.ValidationError("Please enter an Email Address with a valid domain")
+        if domain_list is None:
+            logging.warning('Please contact your administrators to create valid domain names')
+        else: 
+            if domain not in domain_list:
+                raise serializers.ValidationError("Please enter an Email Address with a valid domain")
         return data
 
     def create(self, validated_data):
