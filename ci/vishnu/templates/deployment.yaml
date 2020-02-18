@@ -19,6 +19,10 @@ spec:
         app.kubernetes.io/name: {{ include "vishnu.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      securityContext:
+        runAsUser: 111
+        runAsGroup: 111
+        fsGroup: 111
       volumes:
         - name: vishnu-volume
           persistentVolumeClaim:
