@@ -44,7 +44,7 @@ spec:
               protocol: TCP
           volumeMounts:
             - mountPath: {{ .Values.volumes.mount.uploads }}
-              name: {{ include "vishnu.pvc" . }}
+              name: vishnu-volume
           livenessProbe:
             httpGet:
               path: /
@@ -56,6 +56,10 @@ spec:
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
+        volumes:
+          - name: vishnu-volume
+            persistentVolumeClaim:
+              claimName: {{ include "vishnu.pvc" . }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
     {{- end }}
