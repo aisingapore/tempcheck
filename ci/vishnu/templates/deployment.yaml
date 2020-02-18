@@ -42,9 +42,9 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
-#          volumeMounts:
-#            - mountPath: {{ .Values.volumes.mount.uploads }}
-#              name: {{ include "vishnu.pvc" . }}
+          volumeMounts:
+            - mountPath: {{ .Values.volumes.mount.uploads }}
+              name: {{ include "vishnu.pvc" . }}
           livenessProbe:
             httpGet:
               path: /
