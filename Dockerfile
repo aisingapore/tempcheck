@@ -4,15 +4,13 @@ ARG APP_DIR=/opt/vishnu
 WORKDIR $APP_DIR
 
 ARG APP_USER=vishnu
-ARG APP_USER_ID=111
+ARG APP_USER_ID=1000
 
 RUN groupadd -r --gid $APP_USER_ID $APP_USER && \
-    useradd --no-log-init -r -m --uid $APP_USER_ID -g $APP_USER $APP_USER && \
-    chown -R $APP_USER:$APP_USER $APP_DIR
+    useradd --no-log-init -r -m --uid $APP_USER_ID -g $APP_USER $APP_USER
+
 
 RUN apt-get update && apt-get install -y gcc libpq-dev
-
-USER vishnu
 
 COPY templates templates
 COPY vishnu vishnu
@@ -25,6 +23,10 @@ RUN python3 -m venv venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install -r requirements.txt && \
     python3 manage.py collectstatic
+
+RUN chown -R $APP_USER:$APP_USER $APP_DIR
+
+USER vishnu
 
 EXPOSE 8000
 

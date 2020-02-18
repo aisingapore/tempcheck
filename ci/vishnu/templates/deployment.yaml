@@ -20,9 +20,9 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       securityContext:
-        runAsUser: 111
-        runAsGroup: 111
-        fsGroup: 111
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       volumes:
         - name: vishnu-volume
           persistentVolumeClaim:
