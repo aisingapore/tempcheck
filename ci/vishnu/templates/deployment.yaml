@@ -19,6 +19,10 @@ spec:
         app.kubernetes.io/name: {{ include "vishnu.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      volumes:
+        - name: vishnu-volume
+          persistentVolumeClaim:
+            claimName: {{ include "vishnu.pvc" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image }}"
@@ -56,10 +60,6 @@ spec:
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
-        volumes:
-          - name: vishnu-volume
-            persistentVolumeClaim:
-              claimName: {{ include "vishnu.pvc" . }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
     {{- end }}
