@@ -32,5 +32,5 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{- define "vishnu.pvc" -}}
-{{- "vishnu-pvc" -}}
+{{- "vishnu-pvc-multi" -}}
 {{- end -}}

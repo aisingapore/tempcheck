@@ -4,7 +4,7 @@ metadata:
   name: {{ include "vishnu.pvc" . }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: "aks-managed-retain"
   resources:
     requests:
