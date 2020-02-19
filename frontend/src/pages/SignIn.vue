@@ -123,9 +123,11 @@ export default {
         console.log(response.data);
 
         const token = response.data.token;
+        const tokenExpiry = response.data.expiry;
 
         if (token) {
           localStorage.setItem("token", token);
+          localStorage.setItem("tokenExpiry", tokenExpiry);
           if (this.checkbox === true) {
             localStorage.setItem("email", this.email);
           }

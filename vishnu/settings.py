@@ -38,6 +38,7 @@ ALLOWED_HOSTS = [app_hostname, gethostbyname(
 
 # Config to change acceptable domain names
 DOMAIN_LIST = os.environ.get("DOMAIN_NAMES")
+TOKEN_EXPIRY = os.environ.get("TOKEN_EXPIRY_IN_DAYS")
 
 # Application definition
 
