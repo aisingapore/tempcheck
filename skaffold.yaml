@@ -12,8 +12,9 @@ deploy:
     releases:
       - name: vishnu
         chartPath: ci/vishnu
-        namespace: vishnu
         values:
           image: 100edockerregistry.azurecr.io/vishnu
         setValueTemplates:
           postgresql.password: "{{.POSTGRES_PASSWORD}}"
+          ingress.hosts: "{{.INGRESS_HOST}}"
+          ingress.tls.hosts: "{{.INGRESS_TLS_HOSTS}}"

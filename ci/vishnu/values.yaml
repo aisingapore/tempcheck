@@ -1,5 +1,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
 # Image only needed for initial helm install to bootstrap the app
 #image: 100edockerregistry.azurecr.io/vishnu:new
 
@@ -17,17 +18,16 @@ service:
 ingress:
   enabled: true
   hosts:
-    - loa.ai3.aisingapore.org
+    - vishnu.ai3.aisingapore.org
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
-
   tls:
     - secretName: loa-tls-secret
       hosts:
-        - "loa.ai3.aisingapore.org"
+        - "vishnu.ai3.aisingapore.org"
 
 volumes:
   mount:
