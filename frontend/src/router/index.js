@@ -38,28 +38,26 @@ const router = new VueRouter({
 });
 
 /*
-Router logic:
+Current Router logic:
 If going to dashboard/new
---> if token exists 
-  --> If Token is null or expired
+--> if token does not exist or has expired
     --> send to login
 If going to login/register
---> if token exists 
-  --> If Token is null or expired
-    --> send to login
-
+--> if token exists and has not expired
+    --> send to history
 */
 
 router.beforeEach((to, from, next) => {
   console.log("Checking route request", to);
   const userToken = localStorage.getItem("token");
+  const tokenExpiry = new Date(localStorage.getItem("tokenExpiry"));
+  const today = new Date();
   if (to.matched.some(record => record.meta.requiresAuth)) {
     console.log("Found token. Continue to page");
-    const tokenExpiry = new Date(localStorage.getItem("tokenExpiry"));
-    const today = new Date();
-
     if (userToken == null || today >= tokenExpiry) {
       localStorage.removeItem("token");
+      localStorage.removeItem("tokenExpiry");
+
       console.log("No/Expired token. Redirecting to sign in page");
       next({
         path: "/",
@@ -69,13 +67,15 @@ router.beforeEach((to, from, next) => {
       next();
     }
   } else if (
-    to.matched.some(record => record && userToken && (to.path === "/" || to.path === "/register"))
+    to.matched.some(record => record && !(userToken == null || today >= tokenExpiry))
   ) {
     console.log("User already signed in. Redirecting to dashboard");
     next({
       path: "/history"
     });
   } else {
+    localStorage.removeItem("token");
+    localStorage.removeItem("tokenExpiry");
     next();
   }
 });

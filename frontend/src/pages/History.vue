@@ -68,6 +68,7 @@ export default {
     },
     signOut() {
       localStorage.removeItem("token");
+      localStorage.removeItem("tokenExpiry");
       this.$router.push("/");
     }
   },
