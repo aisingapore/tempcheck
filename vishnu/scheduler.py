@@ -1,3 +1,5 @@
+# pylint: disable=no-member
+
 import logging
 from datetime import datetime, timedelta
 from os import environ
