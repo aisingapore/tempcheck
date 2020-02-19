@@ -1,9 +1,12 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from os import environ
 
 import mandrill
+import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
+from django.contrib.auth.models import User
+from django.db.models import Count, Q
 from django.template.loader import render_to_string
 
 from vishnu.models import Entry
@@ -11,13 +14,43 @@ from vishnu.models import Entry
 logger = logging.getLogger('vishnu.scheduler')
 
 
-def generate_report(daily_submission: str, interval: dict):
+def generate_report(daily_submission: int, interval: dict):
     """Generate report
     """
-    report_dict = {
-        'entries': len(Entry.objects.all()),
-        'date': datetime.now().strftime("%d %B %Y, %A")
-    }
+    pst = pytz.timezone('Singapore')
+    report_dict = {'date': datetime.now(
+        tz=pst).strftime("%d %B %Y %I:%M %p, %A")}
+
+    # total submissions for reporting period
+    filter_datetime = datetime.utcnow() - timedelta(**interval)
+    filter_set = Entry.objects.filter(date_created__gt=filter_datetime)
+
+    # total submissions
+    report_dict['total_submissions'] = {}
+    if interval['days'] == 1:
+        # convert to Singapore Timezone first
+        for i in filter_set:
+            i.sgt_date_created = i.date_created.astimezone(pst)
+
+        report_dict['total_submissions']['AM'] = len(
+            [i for i in filter_set if i.sgt_date_created.hour < 12])
+        report_dict['total_submissions']['PM'] = filter_set.count(
+        ) - report_dict['total_submissions']['AM']
+    else:
+        report_dict['total_submissions']['Total'] = filter_set.count()
+
+    # submissions above 38 degrees
+    high_temp = filter_set.filter(temperature__gt=38).order_by('temperature')
+    report_dict['high_temp'] = [{'temperature': i.temperature,
+                                 'username': i.owner.get_username()} for i in high_temp]
+
+    # incomplete submissions
+    user_set = User.objects.annotate(
+        number_of_entries=Count('records', filter=Q(records__date_created__gt=filter_datetime)))
+    report_dict['incomplete_users'] = user_set.filter(
+        number_of_entries__lt=daily_submission
+    ).values_list('username', flat=True).order_by('username')
+
     logger.info(f'Report Variables:\n{report_dict}')
     send_report(report_dict)
 
@@ -36,7 +69,7 @@ def send_report(report_dict: dict):
         message = {'subject': environ.get('REPORT_EMAIL_SUBJECT', ''),
                    'from_email': environ.get('REPORT_FROM_EMAIL'),
                    'from_name': environ.get('REPORT_FROM_NAME', ''),
-                   'html': render_to_string('report.html', report_dict),
+                   'html': render_to_string('report.html', report_dict, using='jinja2'),
                    'preserve_recipients': False}
 
         to_emails = environ.get('REPORT_TO_EMAIL', '').split(',')
@@ -60,15 +93,17 @@ def start_scheduler():
     }
 
     args = {
-        'daily_submission': environ.get('REPORT_EXPECTED_DAILY', '1'),
+        'daily_submission': int(environ.get('REPORT_EXPECTED_DAILY', '1')),
         'interval': config
     }
 
-    logger.info(f'Scheduler Config:\n{config}')
+    logger.info(f'Scheduler Config: {config}')
 
     if any(config.values()):
         scheduler = BackgroundScheduler()
-        scheduler.add_job(generate_report, 'interval', kwargs=args, **config)
+        # interval timing starts at 12am SGT
+        scheduler.add_job(generate_report, 'interval', kwargs=args,
+                          start_date='2020-01-01 16:00:00', **config)
         scheduler.start()
     else:
         logger.info('Configuration not created for report scheduler')

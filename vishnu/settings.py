@@ -98,6 +98,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
         'DIRS': [TEMPLATES_DIR],
+        'NAME': 'jinja2'
     },
 ]
 

@@ -233,6 +233,10 @@
             margin-bottom: 0;
         }
 
+        .mb1 {
+            margin-bottom: 1rem;
+        }
+
         .preheader {
             color: transparent;
             display: none;
@@ -253,7 +257,19 @@
         hr {
             border: 0;
             border-bottom: 1px solid #f6f6f6;
-            margin: 20px 0;
+            margin: 16px 0;
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        .text-white {
+            color: #fff !important;
+        }
+
+        .highlight-danger {
+            background-color: #dc3545;
         }
 
         /* -------------------------------------
@@ -369,15 +385,36 @@
                         <!-- START MAIN CONTENT AREA -->
                         <tr>
                             <td class="wrapper">
-                                <h2 class="align-center mb0">Report</h2>
+                                <h1 class="align-center mb1">Report</h1>
                                 <p class="align-center">{{ date }}</p>
+                                <hr />
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                     <tr>
-                                        <td>
-                                            <p>Entries: {{ entries }}</p>
-                                            <p>Statistics 2: {{ test }}</p>
-                                            <p>Statistics 3: {{ test }}</p>
-                                        </td>
+                                        <h2 class='mb1'>Total Submissions</h2>
+                                        {% for key, value in total_submissions.items() %}
+                                        <p><span>{{ key }}: </span>{{ value }}</p>
+                                        {% endfor %}
+                                    </tr>
+                                </table>
+                                <hr />
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <h2 class='mb1'>High Temperature</h2>
+                                        {% for i in high_temp %}
+                                        <p class="highlight-danger text-white">Username: <a class="text-white"
+                                                href="#">{{ i.username }}</a>
+                                            , Temperature: <span>{{ i.temperature }} &#8451;</span>
+                                        </p>
+                                        {% endfor %}
+                                    </tr>
+                                </table>
+                                <hr />
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <h2 class='mb1'>Incomplete Submissions</h2>
+                                        {% for i in incomplete_users %}
+                                        <p>Username: {{ i }}</p>
+                                        {% endfor %}
                                     </tr>
                                 </table>
                             </td>
