@@ -95,6 +95,11 @@ TEMPLATES = [
             ],
         },
     },
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [TEMPLATES_DIR],
+        'NAME': 'jinja2'
+    },
 ]
 
 WSGI_APPLICATION = 'vishnu.wsgi.application'
@@ -166,4 +171,34 @@ WEBPACK_LOADER = {
         'BUNDLE_DIR_NAME': '/bundles/',  # must end with slash
         'STATS_FILE': os.path.join(FRONTEND_DIR, 'webpack-stats.json'),
     }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} - {module} - {levelname} - {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': './vishnu.log',
+            'formatter': 'verbose'
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'vishnu': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
 }

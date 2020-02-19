@@ -97,6 +97,28 @@ and
 `python manage.py migrate`
 
 
+### Setup report generation
+
+Update `.env` with the follow values:
+```
+MANDRILL_API_KEY=
+
+REPORT_INTERVAL_SECONDS=
+REPORT_INTERVAL_MINUTES=
+REPORT_INTERVAL_HOURS=0
+REPORT_INTERVAL_DAYS=0
+REPORT_EXPECTED_DAILY=1
+
+REPORT_EMAIL_SUBJECT=
+REPORT_FROM_EMAIL=
+REPORT_FROM_NAME=
+REPORT_TO_EMAIL=
+REPORT_TO_NAME=
+```
+* More information on report interval is available [here](https://apscheduler.readthedocs.io/en/stable/modules/triggers/interval.html).
+* `REPORT_TO_EMAIL` and `REPORT_TO_NAME` are comma seperated values e.g. `test@gmail.com, test2@gmail.com`.
+* Currently, app and values stored in DB are in UTC timezone. Some datetimes are then hardcoded in UTC then converted to SGT time.
+
 ## Deployment
 
 
