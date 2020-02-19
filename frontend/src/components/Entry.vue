@@ -9,7 +9,7 @@
       </div>
     </template>
     <v-card ma-0>
-      <v-card-title class="headline yellow lighten-4">
+      <v-card-title class="headline card-title lighten-4">
         <v-container>
           <v-row class="mt-n6 mb-n3">
             <v-col cols="12" class="text-right body-2 grey--text">
@@ -127,11 +127,15 @@ export default {
 </script>
 <style scoped>
 .entry-container {
-  background-color: linen;
+  background-color: #f5faff;
+  border: 1.5px solid #1976d2;
   width: 185px;
   display: block;
   margin: 10px auto;
   padding: 8px 10px;
+  box-shadow: 1px 5px 2px -2px rgba(0, 0, 0, 0.3),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
 }
 
 .date-time {
@@ -144,5 +148,9 @@ export default {
   margin-top: 3px;
   margin-left: 2px;
   vertical-align: top;
+}
+
+.card-title {
+  background-color: #dbedff;
 }
 </style>

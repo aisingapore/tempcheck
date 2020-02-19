@@ -50,6 +50,9 @@
                   class="mr-4 white--text"
                   @click="register"
                   >Register
+                  <i class="material-icons">
+                    assignment_ind
+                  </i>
                 </v-btn>
                 <v-row justify="center" class="mt-8">
                   <v-btn

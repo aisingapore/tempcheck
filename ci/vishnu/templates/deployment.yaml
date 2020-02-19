@@ -19,6 +19,14 @@ spec:
         app.kubernetes.io/name: {{ include "vishnu.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      volumes:
+        - name: vishnu-volume
+          persistentVolumeClaim:
+            claimName: {{ include "vishnu.pvc" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image }}"
@@ -42,6 +50,9 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
+          volumeMounts:
+            - mountPath: {{ .Values.volumes.mount.uploads }}
+              name: vishnu-volume
           livenessProbe:
             httpGet:
               path: /

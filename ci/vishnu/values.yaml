@@ -29,6 +29,10 @@ ingress:
       hosts:
         - "loa.ai3.aisingapore.org"
 
+volumes:
+  mount:
+    uploads: "/opt/vishnu/uploads"
+
 resources: {}
 
 nodeSelector: {}

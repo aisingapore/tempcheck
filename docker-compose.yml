@@ -7,3 +7,5 @@ services:
       - .env
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
