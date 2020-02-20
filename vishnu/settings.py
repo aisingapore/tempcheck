@@ -32,9 +32,9 @@ SECRET_KEY = 'r0lqpd*5ypno*xjffm+2q_i7-3)3x5kzzgtg^g=+%uf9=og#1p'
 DEBUG = True
 
 app_hostname = gethostname()
+
 ALLOWED_HOSTS = [app_hostname, gethostbyname(
-    app_hostname), "localhost", "loa.ai3.aisingapore.org",
-    "127.0.0.1"]
+    app_hostname), "localhost", "127.0.0.1", ".ai3.aisingapore.org"]
 
 # Config to change acceptable domain names
 DOMAIN_LIST = os.environ.get("DOMAIN_NAMES")
