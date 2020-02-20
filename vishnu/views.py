@@ -1,11 +1,19 @@
 from rest_framework import viewsets, permissions, mixins, generics
 from rest_framework.response import Response
 
+import datetime
+
 from knox.models import AuthToken
 
 from .models import Entry
+from django.conf import settings
 from .serializers import EntrySerializer, CreateUserSerializer, UserSerializer, LoginUserSerializer
 # pylint: disable=no-member
+
+# How long in days token will last before expiry, default value = 30 days
+expiry = getattr(settings, "TOKEN_EXPIRY")
+if (expiry is None or expiry == ''):
+    expiry = 30
 
 class ImmutableViewSet(mixins.CreateModelMixin,
                                 mixins.ListModelMixin,
@@ -35,9 +43,13 @@ class RegistrationAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        token = AuthToken.objects.create(user, expiry=datetime.timedelta(days=int(expiry)))[1]
+        
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user)[1]
+            # "token": AuthToken.objects.create(user)[1]\
+            "token": token,
+            "expiry": datetime.timedelta(days=int(expiry)) + datetime.date.today()
         })
 
 class LoginAPI(generics.GenericAPIView):
@@ -47,9 +59,13 @@ class LoginAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
+        token = AuthToken.objects.create(user, expiry=datetime.timedelta(days=int(expiry)))[1]
+
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user)[1]
+            # "token": AuthToken.objects.create(user)[1]
+            "token": token,
+            "expiry": datetime.timedelta(days=int(expiry)) + datetime.date.today()
         })
 
 class UserAPI(generics.RetrieveAPIView): # Same as baseview set later on
