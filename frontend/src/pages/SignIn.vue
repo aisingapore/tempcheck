@@ -25,7 +25,7 @@
                   v-on:keyup.enter="validate"
                   class="input-group--focused"
                 ></v-text-field>
-                
+
                 <v-text-field
                   color="orange accent-4"
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -128,18 +128,17 @@ export default {
           localStorage.setItem("token", token);
           if (this.checkbox === true) {
             localStorage.setItem("email", this.email);
-          }
-          else{
+          } else {
             localStorage.removeItem("email");
           }
           this.goToHome();
-        } 
+        }
       } catch (err) {
         this.snackbar.message = "Error logging in!";
         this.snackbar.show = true;
         console.log("Error:", err);
       }
-    },
+    }
   }
 };
 </script>
