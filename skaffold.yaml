@@ -16,5 +16,5 @@ deploy:
           image: 100edockerregistry.azurecr.io/vishnu
         setValueTemplates:
           postgresql.password: "{{.POSTGRES_PASSWORD}}"
-          ingress.hosts: "{{.INGRESS_HOST}}"
-          ingress.tls.hosts: "{{.INGRESS_TLS_HOSTS}}"
+          ingress.hosts[0]: "{{.INGRESS_HOST}}"
+          ingress.tls.hosts[0]: "{{.INGRESS_TLS_HOSTS}}"
