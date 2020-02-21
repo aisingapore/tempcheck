@@ -27,6 +27,7 @@
       </v-card-title>
       <div v-if="dialog">
         <GmapMap
+          v-if="map === 'gmap'"
           :center="{
             lat: parseFloat(location.lat),
             lng: parseFloat(location.long)
@@ -60,12 +61,14 @@
             :radius="500"
           />
         </GmapMap>
+        <OneMap v-if="map == 'onemap'" :location="location" />
       </div>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import OneMap from "@/components/OneMap";
 const months = [
   "Jan",
   "Feb",
@@ -85,9 +88,13 @@ const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default {
   name: "entry",
+  components: {
+    OneMap
+  },
   data() {
     return {
-      dialog: false
+      dialog: false,
+      map: "onemap"
     };
   },
   computed: {
