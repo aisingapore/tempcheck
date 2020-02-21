@@ -35,5 +35,5 @@ deploy:
   script:
     - cd frontend && npm install && npm run build && cd ..
     - docker login -u $ACR_USERNAME -p $ACR_KEY 100edockerregistry.azurecr.io
-    - export KUBECONFIG=$KUBE_CONFIG
-    - skaffold run --namespace=$KUBE_NS
+    - echo $KUBE_CONFIG
+    - KUBECONFIG=$KUBE_CONFIG skaffold run --namespace=$KUBE_NS
