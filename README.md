@@ -88,12 +88,12 @@ docker exec -it \
 
 ### Changing database schema
 
-If you change the schema of the database, make sure to run: 
+If you change the schema of the database, make sure to run:
 
-`python manage.py makemigrations` 
+`python manage.py makemigrations`
 
 and
- 
+
 `python manage.py migrate`
 
 

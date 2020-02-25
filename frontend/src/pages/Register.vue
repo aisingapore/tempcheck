@@ -121,7 +121,7 @@ export default {
         if (token) {
           localStorage.setItem("token", token);
           localStorage.setItem("email", this.email);
-          this.goToHistory();
+          this.goToVerify();
         }
       } catch (err) {
         // console.log(err);
@@ -133,8 +133,8 @@ export default {
         console.log("Error:", err);
       }
     },
-    goToHistory() {
-      this.$router.push("/history");
+    goToVerify() {
+      this.$router.push("/verify");
     },
     onType: function() {
       this.invalidCredentials = false;
