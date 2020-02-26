@@ -38,18 +38,19 @@
                   v-on:keyup.enter="validate"
                   @click:append="showPassword = !showPassword"
                 ></v-text-field>
-                <v-checkbox v-model="checkbox" :label="`Remember Me`">
-                </v-checkbox>
+                <v-checkbox
+                  v-model="checkbox"
+                  :label="`Remember Me`"
+                ></v-checkbox>
                 <v-btn
                   :disabled="!valid"
                   color="orange accent-4"
                   text-color="white"
                   class="mr-4 white--text"
                   @click="login"
-                  >Sign In
-                  <i class="material-icons">
-                    lock_open
-                  </i>
+                >
+                  Sign In
+                  <i class="material-icons">lock_open</i>
                 </v-btn>
                 <v-row justify="center" class="mt-8">
                   <v-btn
@@ -58,8 +59,9 @@
                     text-color="white"
                     class="mr-4 white--text"
                     @click="goToRegister"
-                    >No account?<br />
-                    Register here
+                  >
+                    No account?
+                    <br />Register here
                   </v-btn>
                 </v-row>
               </v-form>
@@ -110,6 +112,9 @@ export default {
     goToRegister() {
       this.$router.push("/register");
     },
+    goToVerify() {
+      this.$router.push("/verify");
+    },
     save: async function() {
       const data = {
         username: this.email,
@@ -134,6 +139,8 @@ export default {
             localStorage.removeItem("email");
           }
           this.goToHome();
+        } else {
+          this.goToVerify();
         }
       } catch (err) {
         this.snackbar.message = "Error logging in!";

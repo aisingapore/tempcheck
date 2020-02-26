@@ -1,11 +1,12 @@
-from os import environ
-import datetime
 import pytz
 import logging
+import datetime
+from os import environ
 
 from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -16,10 +17,10 @@ from knox.auth import TokenAuthentication
 from dotenv import load_dotenv
 import mandrill
 
+from .settings import DEBUG
 from .models import Entry, UserAuth
 from .serializers import EntrySerializer, CreateUserSerializer, \
     UserSerializer, LoginUserSerializer
-from .settings import DEBUG
 
 
 load_dotenv()
@@ -28,9 +29,9 @@ logger = logging.getLogger('vishnu.scheduler')
 # pylint: disable=no-member
 
 # How long in days token will last before expiry, default value = 30 days
-expiry = getattr(settings, "TOKEN_EXPIRY")
-if (expiry is None or expiry == ''):
-    expiry = 30
+session_expiry = getattr(settings, "TOKEN_EXPIRY")
+if (session_expiry is None or session_expiry == ''):
+    session_expiry = 30
 
 
 class ImmutableViewSet(mixins.CreateModelMixin,
@@ -64,42 +65,58 @@ class RegistrationAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        token = AuthToken.objects.create(
-            user, expiry=datetime.timedelta(days=int(expiry)))[1]
 
-        verification_link = self.get_verification_link(user)
-        if DEBUG:
-            self.send_email(name="Raimi", email="raimi.bkarim@gmail.com",
-                            verification_link=verification_link)
-        else:
-            self.verify_email(name="Raimi", email=user.email,
-                              verification_link=verification_link)
+        session_token = AuthToken.objects.create(
+            user, expiry=datetime.timedelta(days=int(session_expiry)))[1]
+
+        _, expires_in, link = self.generate_token_expiry_link(
+            user)
+        self.send_email(user.email, link, expires_in)
 
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            # "token": AuthToken.objects.create(user)[1]\
-            # "token": token,
-            # "expiry": datetime.timedelta(days=int(expiry)) + datetime.date.today()
+            "token": session_token
         })
 
-    def get_verification_link(self, user):
+    @staticmethod
+    def generate_token_expiry_link(user):
+        """Generates token and expiry, then generates link"""
 
-        EXPIRES_IN = 1  # MINUTES
+        EXPIRES_IN = 1  # minute
 
-        token = AuthToken.objects.create(
-            user, expiry=datetime.timedelta(minutes=int(EXPIRES_IN)))[1]
-        expiry = datetime.timedelta(minutes=int(
-            EXPIRES_IN)) + datetime.datetime.now()
+        expires_in_datetime = datetime.timedelta(minutes=int(EXPIRES_IN))
+        expiry = expires_in_datetime + datetime.datetime.now(tz=pytz.UTC)
 
-        user_auth = UserAuth(user=user, token=token, expiry=expiry)
-        user_auth.save()
+        _, token = AuthToken.objects.create(user, expiry=expires_in_datetime)
+
+        # TODO serialize this
+        # TODO use knox's model
+        # Update and create accordingly
+        userauth_queryset = UserAuth.objects.filter(user=user)
+        if userauth_queryset.count() == 0:
+            user_auth = UserAuth(user=user, token=token, expiry=expiry)
+            user_auth.save()
+        else:
+            user_auth = userauth_queryset[0]
+            user_auth.token = token
+            user_auth.expiry = expiry
+            user_auth.is_verified = False
+            user_auth.save()
 
         if DEBUG:
-            return f"http://127.0.0.1:8000/api/auth/verify?email={user.email}&token={token}"
+            hostname = "127.0.0.1:8000"
+            link = f"http://{hostname}/api/auth/verify?email={user.email}&token={token}"
         else:
-            return f"https://loa.ai3.aisingapore.org//api/auth/verify?email={user.email}&token={token}"
+            hostname = environ.get("DEPLOYMENT_HOSTNAME")
+            link = f"https://{hostname}/api/auth/verify?email={user.email}&token={token}"
 
-    def send_email(self, name, email, verification_link):
+        return token, EXPIRES_IN, link
+
+    @staticmethod
+    def send_email(email, link, expires_in):
+
+        if DEBUG:
+            email = environ.get("TEST_VERIFY_EMAIL")
 
         try:
             mandrill_client = mandrill.Mandrill(
@@ -108,15 +125,16 @@ class RegistrationAPI(generics.GenericAPIView):
             message = {'subject': "Verify your account",
                        'from_email': "noreply@aisingapore.org",
                        'from_name': "LOA",
-                       'html': f"<p>Hey {name}, " +
-                       f"click <a href='{verification_link}'>here</a>" +
-                       " to verify your account. Note: this link will expire in 48 hours.</p>",
-                       'preserve_recipients': False}
-            message['to'] = [{'email': email.strip(), 'name': name.strip()}]
+                       'html': "<p>Hey, " +
+                       f"click <a href='{link}'>here</a> " +
+                       "to verify your account. " +
+                       f"Note that this link will expire in {expires_in} hours.</p>",
+                       "preserve_recipients": False}
+            message["to"] = [{"email": email.strip()}]
 
             result = mandrill_client.messages.send(message)
             logger.info(f'Mandrill Results:\n{result}')
-            logger.info('report sent')
+            logger.info('verification email sent')
         except mandrill.Error as error:
             logger.error(error)
 
@@ -125,17 +143,33 @@ class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginUserSerializer
 
     def post(self, request, *args, **kwargs):
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
-        token = AuthToken.objects.create(
-            user, expiry=datetime.timedelta(days=int(expiry)))[1]
+
+        session_token = AuthToken.objects.create(
+            user, expiry=datetime.timedelta(days=int(session_expiry)))[1]
+
+        userauth_queryset = UserAuth.objects.filter(user=user)
+        if userauth_queryset.count() == 0:
+            return Response({"token": ""})
+        else:
+
+            user_auth = userauth_queryset[0]
+            if not user_auth.is_verified:
+                # Regenerate token
+                _, expiry, link = RegistrationAPI.generate_token_expiry_link(
+                    user)
+                RegistrationAPI.send_email(user.email, link, expiry)
+
+                return Response({"token": ""})
 
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             # "token": AuthToken.objects.create(user)[1]
-            "token": token,
-            "expiry": datetime.timedelta(days=int(expiry)) + datetime.date.today()
+            "token": session_token,
+            "expiry": datetime.timedelta(days=int(session_expiry)) + datetime.date.today()
         })
 
 
@@ -148,18 +182,30 @@ class UserAPI(generics.RetrieveAPIView):  # Same as baseview set later on
 
 
 class VerifyAPI(APIView):
-    # authentication_classes = [TokenAuthentication, ]
-    # permission_classes = [IsAuthenticated, ]
 
     def get(self, request):
-        email = request.GET.get('email', '')
-        token = request.GET.get('token', '')
+        """Checks if token is still valid and has not expired"""
 
+        email = request.GET.get("email", "")
+        token = request.GET.get("token", "")
+
+        # TODO handle no such user/email (unlikely)
         user = User.objects.filter(username=email)[0]
+
+        # TODO handle no user_auth
         user_auth = UserAuth.objects.filter(user=user)[0]
 
-        if datetime.datetime.now(tz=pytz.UTC) <= user_auth.expiry and \
-                user_auth.token == token:
+        if user_auth.is_verified:
             return redirect("/#/verified")
+        elif datetime.datetime.now(tz=pytz.UTC) <= user_auth.expiry and \
+                token == user_auth.token:
+            user_auth.is_verified = True
+            user_auth.save()
+            return redirect("/#/verified")
+        else:
+            # Regenerate token
+            _, expiry, link = RegistrationAPI.generate_token_expiry_link(
+                user)
+            RegistrationAPI.send_email(email, link, expiry)
 
-        return redirect("/#/expired")
+            return redirect("/#/expired")

@@ -2,7 +2,10 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <p>Oops! The link has expired. Please register again.</p>
+        <p>
+          Oops! The link has expired. A new token has been generated for you.
+          Please check your email again and click on the link.
+        </p>
         <v-btn
           @click="goToRegister"
           color="orange accent-4"
