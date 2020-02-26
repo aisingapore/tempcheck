@@ -21,6 +21,7 @@ from django.views.generic import TemplateView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from .routers import router
+from .settings import DEBUG
 from .views import RegistrationAPI, LoginAPI, UserAPI, VerifyAPI
 
 def add_url_for_path(file_path, urlpatterns, content_type="application/javascript"):
@@ -71,10 +72,10 @@ urlpatterns = [
     path("api/auth/verify", VerifyAPI.as_view())
 ]
 
-# FIXME add condition if development or deployment mode
-# for f in os.listdir(os.path.join(settings.FRONTEND_DIR, 'dist')):
-#     if "precache-manifest" in f:
-#         add_url_for_path(f, urlpatterns)
-# # Required to serve static files in prod. Workaround for now
-# # Use https://pypi.org/project/dj-static/ or other solutions instead in future
+if not DEBUG:
+    for f in os.listdir(os.path.join(settings.FRONTEND_DIR, 'dist')):
+        if "precache-manifest" in f:
+            add_url_for_path(f, urlpatterns)
+# Required to serve static files in prod. Workaround for now
+# Use https://pypi.org/project/dj-static/ or other solutions instead in future
 urlpatterns += staticfiles_urlpatterns()
