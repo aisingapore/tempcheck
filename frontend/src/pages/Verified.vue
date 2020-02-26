@@ -1,15 +1,17 @@
-
 <template>
   <v-container fluid>
     <v-row>
       <v-col>
-        <p>Your email has been verified! Sign in and record your temperature.</p>
+        <p>
+          Your email has been verified! Sign in and record your temperature.
+        </p>
         <v-btn
           @click="goToSignIn"
           color="orange accent-4"
           text-color="white"
           class="mr-4 white--text"
-        >Sign in</v-btn>
+          >Sign in</v-btn
+        >
       </v-col>
     </v-row>
   </v-container>

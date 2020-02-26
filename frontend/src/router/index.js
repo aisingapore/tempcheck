@@ -85,7 +85,9 @@ router.beforeEach((to, from, next) => {
       next();
     }
   } else if (
-    to.matched.some(record => record && !(userToken == null || today >= tokenExpiry))
+    to.matched.some(
+      record => record && !(userToken == null || today >= tokenExpiry)
+    )
   ) {
     console.log("User already signed in. Redirecting to dashboard");
     next({

@@ -8,7 +8,8 @@
           color="orange accent-4"
           text-color="white"
           class="mr-4 white--text"
-        >Register</v-btn>
+          >Register</v-btn
+        >
       </v-col>
     </v-row>
   </v-container>
