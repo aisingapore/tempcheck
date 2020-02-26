@@ -57,7 +57,6 @@ export default {
       };
       try {
         const response = await axios.get(url, { headers });
-        console.log(response.data);
         this.list = response.data;
       } catch (err) {
         console.log("Error:", err);
