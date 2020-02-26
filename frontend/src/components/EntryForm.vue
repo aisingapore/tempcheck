@@ -7,6 +7,34 @@
     <v-form>
       <v-row justify="center">
         <v-col cols="12">
+          <v-row class="mt-n6 pb-2">
+            <v-col class="subtitle-2">
+              Step 1
+            </v-col>
+          </v-row>
+          <v-row class="mt-n6 pb-2">
+            <v-col>
+              <vue-picture-input
+                height="200"
+                width="200"
+                accept="image/*"
+                size="10"
+                ref="fileInput"
+                capture="environment"
+                @change="fileUpload"
+                :custom-strings="{
+                  tap: 'Tap to take photo<br /> of temperature reading',
+                  drag: 'Drag to upload image'
+                }"
+              />
+            </v-col>
+          </v-row>
+          <v-row class="pb-4">
+            <v-col class="subtitle-2"
+              >Step 2 <br />
+              Set temperature</v-col
+            >
+          </v-row>
           <v-row justify="center" class="mt-4">
             <v-col cols="10" xs="12">
               <v-slider
@@ -31,24 +59,6 @@
                   </v-icon>
                 </template>
               </v-slider>
-            </v-col>
-          </v-row>
-
-          <v-row class="mt-n6 pb-2">
-            <v-col>
-              <vue-picture-input
-                height="200"
-                width="200"
-                accept="image/*"
-                size="10"
-                ref="fileInput"
-                capture="environment"
-                @change="fileUpload"
-                :custom-strings="{
-                  tap: 'Tap to take photo<br /> of temperature reading',
-                  drag: 'Drag to upload image'
-                }"
-              />
             </v-col>
           </v-row>
 

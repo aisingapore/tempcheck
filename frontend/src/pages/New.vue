@@ -1,7 +1,7 @@
 <template>
   <div id="new-entry">
-    <h1>{{ name }}</h1>
-    <h2>New Entry <v-icon>mdi-thermometer-lines</v-icon></h2>
+    <h2>{{ name }}</h2>
+    <h3>New Entry <v-icon>mdi-thermometer-lines</v-icon></h3>
     <entry-form />
     <button @click="goToHome">History</button>
   </div>

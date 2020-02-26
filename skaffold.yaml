@@ -9,6 +9,9 @@ build:
 #    push: false
 deploy:
   helm:
+    flags:
+      upgrade:
+        - --install
     releases:
       - name: vishnu
         chartPath: ci/vishnu
