@@ -3,7 +3,7 @@
     <div class="md-layout">
       <div class="md-layout-item md-medium-size-100 md-xsmall-size-100">
         <v-container>
-          <v-snackbar v-model="snackbar.show" color="error" top>
+          <v-snackbar v-model="snackbar.show" :color="snackbar.color" top>
             {{ snackbar.message }}
             <v-btn text @click="snackbar.show = false">Close</v-btn>
           </v-snackbar>
@@ -40,19 +40,18 @@
                   v-on:keyup="onType"
                   @click:append="showPassword = !showPassword"
                 ></v-text-field>
-                <v-p v-if="invalidCredentials" class="errorMsg">
-                  Invalid credentials
-                </v-p>
+                <v-p v-if="invalidCredentials" class="errorMsg"
+                  >Invalid credentials</v-p
+                >
                 <v-btn
                   :disabled="!valid"
                   color="orange accent-4"
                   text-color="white"
                   class="mr-4 white--text"
                   @click="register"
-                  >Register
-                  <i class="material-icons">
-                    assignment_ind
-                  </i>
+                >
+                  Register
+                  <i class="material-icons">assignment_ind</i>
                 </v-btn>
                 <v-row justify="center" class="mt-8">
                   <v-btn
@@ -61,7 +60,9 @@
                     text-color="white"
                     class="mr-4 white--text"
                     @click="goToSignIn"
-                    >Already registered?<br />Sign In here
+                  >
+                    Already registered?
+                    <br />Sign In here
                   </v-btn>
                 </v-row>
               </v-form>
@@ -89,7 +90,8 @@ export default {
       showPassword: false,
       snackbar: {
         show: false,
-        message: null
+        message: null,
+        color: "success"
       },
       rules: {
         required: value => !!value || "Required."
@@ -114,27 +116,25 @@ export default {
       // push to backend
       const url = "/api/auth/register";
       try {
-        console.log(data);
         const response = await axios.post(url, data);
-        const token = response.data.token;
-
-        if (token) {
-          localStorage.setItem("token", token);
-          localStorage.setItem("email", this.email);
-          this.goToVerify();
-        }
+        console.log(response);
+        this.$router.push({ name: "EmailSent" });
       } catch (err) {
-        // console.log(err);
-        var message =
-          Object.values(err)[2].data.email ||
-          Object.values(err)[2].data.non_field_errors;
-        this.snackbar.message = message[0].replace(/^\w/, c => c.toUpperCase());
+        console.log(err.response);
+        if (err.response.status === 500) {
+          this.snackbar.message =
+            "We are currently experiencing problems with the server. Please try again later.";
+        } else {
+          var message =
+            Object.values(err)[2].data.email ||
+            Object.values(err)[2].data.non_field_errors;
+          this.snackbar.message = message[0].replace(/^\w/, c =>
+            c.toUpperCase()
+          );
+        }
+        this.snackbar.color = "error";
         this.snackbar.show = true;
-        console.log("Error:", err);
       }
-    },
-    goToVerify() {
-      this.$router.push("/verify");
     },
     onType: function() {
       this.invalidCredentials = false;

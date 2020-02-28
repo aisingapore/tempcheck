@@ -6,6 +6,7 @@ from os import environ
 from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -66,25 +67,22 @@ class RegistrationAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        session_token = AuthToken.objects.create(
-            user, expiry=datetime.timedelta(days=int(session_expiry)))[1]
-
         _, expires_in, link = self.generate_token_expiry_link(
             user)
-        self.send_email(user.email, link, expires_in)
+        email_is_sent = self.send_email(user.email, link, expires_in)
 
-        return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": session_token
-        })
+        if email_is_sent:
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @staticmethod
     def generate_token_expiry_link(user):
         """Generates token and expiry, then generates link"""
 
-        EXPIRES_IN = 1  # minute
+        EXPIRES_IN = 24  # hours
 
-        expires_in_datetime = datetime.timedelta(minutes=int(EXPIRES_IN))
+        expires_in_datetime = datetime.timedelta(hours=int(EXPIRES_IN))
         expiry = expires_in_datetime + datetime.datetime.now(tz=pytz.UTC)
 
         _, token = AuthToken.objects.create(user, expiry=expires_in_datetime)
@@ -103,20 +101,13 @@ class RegistrationAPI(generics.GenericAPIView):
             user_auth.is_verified = False
             user_auth.save()
 
-        if DEBUG:
-            hostname = "127.0.0.1:8000"
-            link = f"http://{hostname}/api/auth/verify?email={user.email}&token={token}"
-        else:
-            hostname = environ.get("DEPLOYMENT_HOSTNAME")
-            link = f"https://{hostname}/api/auth/verify?email={user.email}&token={token}"
+        hostname = environ.get("DEPLOYMENT_HOSTNAME")
+        link = f"https://{hostname}/api/auth/verify?email={user.email}&token={token}"
 
         return token, EXPIRES_IN, link
 
     @staticmethod
     def send_email(email, link, expires_in):
-
-        if DEBUG:
-            email = environ.get("TEST_VERIFY_EMAIL")
 
         try:
             mandrill_client = mandrill.Mandrill(
@@ -125,8 +116,8 @@ class RegistrationAPI(generics.GenericAPIView):
             message = {'subject': "Verify your account",
                        'from_email': "noreply@aisingapore.org",
                        'from_name': "LOA",
-                       'html': "<p>Hey, " +
-                       f"click <a href='{link}'>here</a> " +
+                       'html': "<p>Thank you for registering with us. " +
+                       f"Click <a href='{link}'>here</a> " +
                        "to verify your account. " +
                        f"Note that this link will expire in {expires_in} hours.</p>",
                        "preserve_recipients": False}
@@ -135,8 +126,12 @@ class RegistrationAPI(generics.GenericAPIView):
             result = mandrill_client.messages.send(message)
             logger.info(f'Mandrill Results:\n{result}')
             logger.info('verification email sent')
+
         except mandrill.Error as error:
             logger.error(error)
+            return False
+
+        return True
 
 
 class LoginAPI(generics.GenericAPIView):
@@ -148,29 +143,32 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
 
+        try:
+            user_auth = UserAuth.objects.filter(user=user)[0]
+        except ObjectDoesNotExist:
+            logger.error("UserAuth object not found.")
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if not user_auth.is_verified:
+            _, expiry, link = RegistrationAPI.generate_token_expiry_link(
+                user)
+            email_is_sent = RegistrationAPI.send_email(
+                user.email, link, expiry)
+
+            if email_is_sent:
+                return Response(status=status.HTTP_205_RESET_CONTENT)
+            else:
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         session_token = AuthToken.objects.create(
             user, expiry=datetime.timedelta(days=int(session_expiry)))[1]
-
-        userauth_queryset = UserAuth.objects.filter(user=user)
-        if userauth_queryset.count() == 0:
-            return Response({"token": ""})
-        else:
-
-            user_auth = userauth_queryset[0]
-            if not user_auth.is_verified:
-                # Regenerate token
-                _, expiry, link = RegistrationAPI.generate_token_expiry_link(
-                    user)
-                RegistrationAPI.send_email(user.email, link, expiry)
-
-                return Response({"token": ""})
 
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             # "token": AuthToken.objects.create(user)[1]
             "token": session_token,
             "expiry": datetime.timedelta(days=int(session_expiry)) + datetime.date.today()
-        })
+        }, status=status.HTTP_200_OK)
 
 
 class UserAPI(generics.RetrieveAPIView):  # Same as baseview set later on
@@ -189,11 +187,17 @@ class VerifyAPI(APIView):
         email = request.GET.get("email", "")
         token = request.GET.get("token", "")
 
-        # TODO handle no such user/email (unlikely)
-        user = User.objects.filter(username=email)[0]
+        try:
+            user = User.objects.filter(username=email)[0]
+        except ObjectDoesNotExist:
+            logger.error("User object not found.")
+            return redirect("/#/serverError")
 
-        # TODO handle no user_auth
-        user_auth = UserAuth.objects.filter(user=user)[0]
+        try:
+            user_auth = UserAuth.objects.filter(user=user)[0]
+        except ObjectDoesNotExist:
+            logger.error("UserAuth object not found.")
+            return redirect("/#/serverError")
 
         if user_auth.is_verified:
             return redirect("/#/verified")
@@ -203,9 +207,11 @@ class VerifyAPI(APIView):
             user_auth.save()
             return redirect("/#/verified")
         else:
-            # Regenerate token
             _, expiry, link = RegistrationAPI.generate_token_expiry_link(
                 user)
-            RegistrationAPI.send_email(email, link, expiry)
+            email_is_sent = RegistrationAPI.send_email(email, link, expiry)
 
-            return redirect("/#/expired")
+            if email_is_sent:
+                return redirect("/#/renewToken")
+            else:
+                return redirect("/#/serverError")
