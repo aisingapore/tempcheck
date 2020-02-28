@@ -3,20 +3,45 @@ import History from "@/pages/History";
 import New from "@/pages/New";
 import Register from "@/pages/Register";
 import SignIn from "@/pages/SignIn";
-import Verify from "@/pages/Verify";
-import Verified from "@/pages/Verified";
-import Expired from "@/pages/Expired";
 
 const routes = [
   {
     path: "/",
     name: "SignIn",
-    component: SignIn
+    component: SignIn,
+    children: [
+      {
+        path: "",
+        name: "NormalSignIn"
+      },
+      {
+        path: "/verified",
+        name: "Verified"
+      },
+      {
+        path: "/renewToken",
+        name: "RenewToken"
+      },
+      {
+        path: "/emailSent",
+        name: "EmailSent"
+      },
+      {
+        path: "/serverError",
+        name: "ServerError"
+      }
+    ]
   },
   {
     path: "/register",
     name: "Register",
-    component: Register
+    component: Register,
+    children: [
+      {
+        path: "/serverError",
+        name: "ServerError"
+      }
+    ]
   },
   {
     path: "/history",
@@ -33,21 +58,6 @@ const routes = [
     meta: {
       requiresAuth: true
     }
-  },
-  {
-    path: "/verify",
-    name: "Verify",
-    component: Verify
-  },
-  {
-    path: "/verified",
-    name: "Verified",
-    component: Verified
-  },
-  {
-    path: "/expired",
-    name: "Expired",
-    component: Expired
   }
 ];
 
