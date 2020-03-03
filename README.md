@@ -12,7 +12,33 @@ This is the main repository for the Temperature recording application (codename 
 
 ### Setup: Environment variables
 
-Obtain an `.env` which is a definition of all the environment variables needed for Postgres, Solr and Azure blob storage configurations.
+Aan `.env` file which is a definition of all the environment variables needed for Postgres and Azure blob storage configurations.
+
+```
+DEPLOYMENT_HOSTNAME=
+
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_HOST=
+POSTGRES_PORT=
+
+MANDRILL_API_KEY=
+
+REPORT_INTERVAL_SECONDS=
+REPORT_INTERVAL_MINUTES=
+REPORT_INTERVAL_HOURS=
+REPORT_INTERVAL_DAYS=
+REPORT_EXPECTED_DAILY=
+
+REPORT_EMAIL_SUBJECT=
+REPORT_FROM_EMAIL=
+REPORT_FROM_NAME=
+REPORT_TO_EMAIL=
+REPORT_TO_NAME=
+
+TEST_VERIFY_EMAIL=
+```
 
 ### Setup: Frontend
 
@@ -88,14 +114,13 @@ docker exec -it \
 
 ### Changing database schema
 
-If you change the schema of the database, make sure to run: 
+If you change the schema of the database, make sure to run:
 
-`python manage.py makemigrations` 
+`python manage.py makemigrations`
 
 and
- 
-`python manage.py migrate`
 
+`python manage.py migrate`
 
 ### Setup report generation
 
@@ -121,18 +146,15 @@ REPORT_TO_NAME=
 
 ## Deployment
 
-
-
 See [gitlab-ci config](.gitlab-ci.yml)
 
 ## APIs
 
-The available APIs can be found under `sensemaker/urls.py`.
-
+The available APIs can be found under `vishnu/urls.py`.
 
 ## Acknowledgements
 
-This project  is supported by the National Research Foundation, Singapore under its AI Singapore Programme (AISG-RP-2019-050). Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not reflect the views of National Research Foundation, Singapore.
+This project is supported by the National Research Foundation, Singapore under its AI Singapore Programme (AISG-RP-2019-050). Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not reflect the views of National Research Foundation, Singapore.
 
 <!-- Reference links -->
 

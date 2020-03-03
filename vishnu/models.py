@@ -18,6 +18,15 @@ class Entry(models.Model):
     owner = models.ForeignKey("auth.User", related_name="records", on_delete=models.DO_NOTHING)
     date_created = models.DateTimeField(auto_now_add=True)
 
+class UserAuth(models.Model):
+
+    user = models.ForeignKey("auth.User", null=False, blank=False,
+                             related_name='auth_users', on_delete=models.CASCADE)
+    token = models.CharField(max_length=64, db_index=True)
+    expiry = models.DateTimeField(null=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+
+
 # Ensure only unique emails in DB
 # pylint: disable=no-member
 User._meta.get_field('email')._unique = True

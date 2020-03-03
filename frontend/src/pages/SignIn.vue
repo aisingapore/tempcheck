@@ -3,7 +3,7 @@
     <div class="md-layout">
       <div class="md-layout-item md-medium-size-100 md-xsmall-size-100">
         <v-container>
-          <v-snackbar v-model="snackbar.show" color="error" top>
+          <v-snackbar v-model="snackbar.show" :color="snackbar.color" top>
             {{ snackbar.message }}
             <v-btn text @click="snackbar.show = false">Close</v-btn>
           </v-snackbar>
@@ -38,18 +38,19 @@
                   v-on:keyup.enter="validate"
                   @click:append="showPassword = !showPassword"
                 ></v-text-field>
-                <v-checkbox v-model="checkbox" :label="`Remember Me`">
-                </v-checkbox>
+                <v-checkbox
+                  v-model="checkbox"
+                  :label="`Remember Me`"
+                ></v-checkbox>
                 <v-btn
                   :disabled="!valid"
                   color="orange accent-4"
                   text-color="white"
                   class="mr-4 white--text"
                   @click="login"
-                  >Sign In
-                  <i class="material-icons">
-                    lock_open
-                  </i>
+                >
+                  Sign In
+                  <i class="material-icons">lock_open</i>
                 </v-btn>
                 <v-row justify="center" class="mt-8">
                   <v-btn
@@ -58,8 +59,9 @@
                     text-color="white"
                     class="mr-4 white--text"
                     @click="goToRegister"
-                    >No account?<br />
-                    Register here
+                  >
+                    No account?
+                    <br />Register here
                   </v-btn>
                 </v-row>
               </v-form>
@@ -89,14 +91,14 @@ export default {
       checkbox: true,
       snackbar: {
         show: false,
-        message: null
+        message: null,
+        color: "success"
       },
       rules: {
         required: value => !!value || "Required."
       }
     };
   },
-
   methods: {
     login() {
       // validate data
@@ -118,28 +120,60 @@ export default {
       // push to backend
       const url = "/api/auth/login";
       try {
-        console.log(data);
         const response = await axios.post(url, data);
         console.log(response.data);
+        console.log(response);
 
         const token = response.data.token;
         const tokenExpiry = response.data.expiry;
 
-        if (token) {
-          localStorage.setItem("token", token);
-          localStorage.setItem("tokenExpiry", tokenExpiry);
-          if (this.checkbox === true) {
-            localStorage.setItem("email", this.email);
-          } else {
-            localStorage.removeItem("email");
+        if (response.status === 200) {
+          if (token) {
+            localStorage.setItem("token", token);
+            localStorage.setItem("tokenExpiry", tokenExpiry);
+            if (this.checkbox === true) {
+              localStorage.setItem("email", this.email);
+            } else {
+              localStorage.removeItem("email");
+            }
+            this.goToHome();
           }
-          this.goToHome();
+        } else if (response.status === 205) {
+          this.snackbar.message =
+            "Your account has not been verified yet. Check your email for the verification " +
+            "link that we have just sent you.";
+          this.snackbar.color = "warning";
+          this.snackbar.show = true;
         }
       } catch (err) {
         this.snackbar.message = "Error logging in!";
+        this.snackbar.color = "error";
         this.snackbar.show = true;
         console.log("Error:", err);
       }
+    }
+  },
+  mounted() {
+    if (this.$route.name === "Verified") {
+      this.snackbar.message =
+        "Your email has been verified! " +
+        "Sign in to record your temperature.";
+      this.snackbar.show = true;
+    } else if (this.$route.name === "RenewToken") {
+      this.snackbar.message =
+        "This verification link has expired. " +
+        "Click on the new link which we have just sent you.";
+      this.snackbar.color = "warning";
+      this.snackbar.show = true;
+    } else if (this.$route.name === "EmailSent") {
+      this.snackbar.message =
+        "Thank you for registering. Click on the confirmation link " +
+        "in the email that we just sent you. ";
+      this.snackbar.show = true;
+    } else if (this.$route.name === "ServerError") {
+      this.snackbar.message =
+        "We are currently experiencing problems with the server. Please try again later.";
+      this.snackbar.show = true;
     }
   }
 };
