@@ -140,8 +140,8 @@ export default {
           }
         } else if (response.status === 205) {
           this.snackbar.message =
-            "Click on the confirmation link in the email " +
-            "that we have just sent you. ";
+            "Your account has not been verified yet. Check your email for the verification " +
+            "link that we have just sent you.";
           this.snackbar.color = "warning";
           this.snackbar.show = true;
         }
