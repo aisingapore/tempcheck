@@ -102,7 +102,7 @@ class RegistrationAPI(generics.GenericAPIView):
             user_auth.save()
 
         hostname = environ.get("DEPLOYMENT_HOSTNAME")
-        link = f"https://{hostname}/api/auth/verify?email={user.email}&token={token}"
+        link = f"{hostname}/api/auth/verify?email={user.email}&token={token}"
 
         return token, EXPIRES_IN, link
 
