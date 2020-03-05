@@ -294,7 +294,7 @@ export default {
       const day = days[time.getDay()];
       return `${day}, ${date} ${month} ${year} ${hour % 12}:${
         minutes < 10 ? "0" : ""
-      }${minutes} ${minutes > 12 ? "PM" : "AM"}`;
+      }${minutes} ${hour > 12 ? "PM" : "AM"}`;
     }
   }
 };
