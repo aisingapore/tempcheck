@@ -22,7 +22,7 @@
                   name="input-10-2"
                   label="E-mail"
                   value
-                  v-on:keyup.enter="validate"
+                  v-on:keyup.enter="login"
                   class="input-group--focused"
                 ></v-text-field>
 
@@ -35,7 +35,7 @@
                   name="input-10-2"
                   label="Password"
                   value
-                  v-on:keyup.enter="validate"
+                  v-on:keyup.enter="login"
                   @click:append="showPassword = !showPassword"
                 ></v-text-field>
                 <v-checkbox
