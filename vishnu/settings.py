@@ -34,7 +34,7 @@ DEBUG = True
 app_hostname = gethostname()
 
 ALLOWED_HOSTS = [app_hostname, gethostbyname(
-    app_hostname), "localhost", "127.0.0.1", ".ai3.aisingapore.org"]
+    app_hostname), "localhost", "127.0.0.1", ".ai3.aisingapore.org", ".tempcheck.aisingapore.org"]
 
 # Config to change acceptable domain names
 DOMAIN_LIST = os.environ.get("DOMAIN_NAMES")
