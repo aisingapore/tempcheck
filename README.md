@@ -146,11 +146,16 @@ REPORT_TO_NAME=
 
 ## Deployment
 
-See [gitlab-ci config](.gitlab-ci.yml)
+The app can either be deployed using: 
+
+- [docker-compose](ci/deployment)
+- [helm](ci/vishnu)
+
+Refer to the [Deployment README](ci/README.md) for details.
 
 ## APIs
 
-The available APIs can be found under `vishnu/urls.py`.
+The available APIs are available at [urls.py](vishnu/urls.py).
 
 ## Acknowledgements
 
