@@ -29,9 +29,7 @@ tests:
 
 deploy:
   stage: deploy
-  only:
-    refs:
-      - deploy
+  when: manual
   script:
     - cd frontend && npm install && npm run build && cd ..
     - docker login -u $ACR_USERNAME -p $ACR_KEY 100edockerregistry.azurecr.io
