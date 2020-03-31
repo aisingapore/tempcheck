@@ -38,8 +38,6 @@ REPORT_FROM_EMAIL=
 REPORT_FROM_NAME=
 REPORT_TO_EMAIL=
 REPORT_TO_NAME=
-
-TEST_VERIFY_EMAIL=
 ```
 
 ### Setup: Frontend
@@ -148,7 +146,7 @@ REPORT_TO_NAME=
 
 ## Deployment
 
-The app can either be deployed using: 
+The app can either be deployed using:
 
 - [docker-compose](ci/deployment)
 - [helm](ci/vishnu)
