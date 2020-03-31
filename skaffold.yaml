@@ -20,4 +20,3 @@ deploy:
         setValueTemplates:
           postgresql.password: "{{.POSTGRES_PASSWORD}}"
           ingress.hosts[0]: "{{.INGRESS_HOST}}"
-          ingress.tlsHost: "{{.INGRESS_HOST}}"

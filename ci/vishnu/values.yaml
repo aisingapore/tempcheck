@@ -26,8 +26,6 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
   tls:
     - secretName: loa-tls-secret
-      hosts:
-        - "vishnu.ai3.aisingapore.org"
 
 volumes:
   mount:

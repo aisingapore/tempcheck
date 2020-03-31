@@ -17,11 +17,11 @@ metadata:
 spec:
 {{- if .Values.ingress.tls }}
   tls:
-  {{- range .Values.ingress.tls }}
     - hosts:
-      {{- range .hosts }}
+      {{- range .Values.ingress.hosts }}
         - {{ . | quote }}
       {{- end }}
+  {{- range .Values.ingress.tls }}
       secretName: {{ .secretName }}
   {{- end }}
 {{- end }}
