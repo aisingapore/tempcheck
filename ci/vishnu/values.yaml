@@ -26,8 +26,8 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
   tls:
     - secretName: loa-tls-secret
-  # not the standard way to do this but easy hack to allow setting of value
-  tlsHost: "vishnu.ai3.aisingapore.org"
+      hosts:
+        - "vishnu.ai3.aisingapore.org"
 
 volumes:
   mount:
