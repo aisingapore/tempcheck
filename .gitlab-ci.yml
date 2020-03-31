@@ -31,7 +31,7 @@ deploy:
   stage: deploy
   when: manual
   script:
-    - sed 's/RELEASE_NAME/$RELEASE_NAME/g' skaffold.yaml
+    - sed -i 's/RELEASE_NAME/$RELEASE_NAME/g' skaffold.yaml
     - cd frontend && npm install && npm run build && cd ..
     - docker login -u $ACR_USERNAME -p $ACR_KEY 100edockerregistry.azurecr.io
     - echo $KUBE_CONFIG
