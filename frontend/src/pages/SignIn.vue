@@ -13,7 +13,7 @@
               style="padding-left: 16px; padding-right: 16px; padding-bottom: 16px;"
               min-width="400"
             >
-              <h3 class="my-4">Temperature recorder</h3>
+              <h3 class="my-4">Tempcheck</h3>
               <v-form ref="form" v-model="valid" :lazy-validation="lazy">
                 <v-text-field
                   color="orange accent-4"
