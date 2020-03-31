@@ -9,6 +9,8 @@ RUN curl -LO https://get.helm.sh/helm-v3.0.0-linux-amd64.tar.gz && \
 
 RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
     chmod +x skaffold && \
-    mv skaffold /usr/local/bin && \
+    mv skaffold /usr/local/bin
 
 RUN apt-get update && apt-get install -y libpq-dev
+
+RUN helm repo add stable https://kubernetes-charts.storage.googleapis.com
