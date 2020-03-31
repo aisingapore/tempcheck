@@ -1,6 +1,8 @@
 # Introduction
 
-This is the main repository for the Temperature recording application (codename Vishnu).
+This is the main repository for the Tempcheck application.
+
+The original codename was Vishnu hence the django app is named as such.
 
 ## Development
 
