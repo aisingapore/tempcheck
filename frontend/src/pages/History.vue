@@ -13,13 +13,28 @@
     </v-row>
     <div class="entry-list">
       <entry
-        v-for="item in list"
+        v-for="item in list.slice(0, numRecordsToShow)"
         :key="item.id"
         :temperature="parseFloat(item.temperature)"
         :timeTaken="new Date(item.date_created)"
         :location="{ lat: item.lat, long: item.long }"
       />
     </div>
+    <v-row>
+      <v-col>
+        <v-btn
+          v-if="numRecordsToShow < list.length"
+          text
+          outlined
+          color="green"
+          class="mr-4 white--text"
+          @click="
+            numRecordsToShow = Math.min(list.length, numRecordsToShow + 4)
+          "
+          >Load {{ Math.min(4, list.length - numRecordsToShow) }} more 
+        </v-btn>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col>
         <v-btn
@@ -46,7 +61,8 @@ export default {
   data() {
     return {
       name: localStorage.getItem("email"),
-      list: []
+      list: [],
+      numRecordsToShow: 4
     };
   },
   methods: {
