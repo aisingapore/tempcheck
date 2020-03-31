@@ -6,7 +6,7 @@ module.exports = {
   outputDir: "./dist/",
   assetsDir: "static",
   pwa: {
-    name: "Temperature recorder",
+    name: "Tempcheck",
     appleMobileWebAppCapable: "yes",
     iconPaths: {
       favicon32: "static/icons/favicon-32x32.png",

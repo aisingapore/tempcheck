@@ -107,7 +107,7 @@ class RegistrationAPI(generics.GenericAPIView):
 
             message = {'subject': "Verify your account",
                        'from_email': "noreply@aisingapore.org",
-                       'from_name': "LOA",
+                       'from_name': "Tempcheck",
                        'html': "<p>Thank you for registering with us. " +
                        f"Click <a href='{link}'>here</a> " +
                        "to verify your account. Note that this link " +
