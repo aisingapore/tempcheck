@@ -13,7 +13,7 @@ deploy:
       upgrade:
         - --install
     releases:
-      - name: vishnu
+      - name: RELEASE_NAME
         chartPath: ci/vishnu
         values:
           image: 100edockerregistry.azurecr.io/vishnu
