@@ -7,7 +7,9 @@ RUN curl -LO https://get.helm.sh/helm-v3.0.0-linux-amd64.tar.gz && \
     tar -zxf helm-v3.0.0-linux-amd64.tar.gz && \
     mv linux-amd64/helm /usr/local/bin/helm
 
-RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
+# Do not update skaffold version. v1.5 and above will not work correctly with helm 3
+# when deploying across namespaces in same kube-context
+RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v1.4.0/skaffold-linux-amd64 && \
     chmod +x skaffold && \
     mv skaffold /usr/local/bin
 
