@@ -30,9 +30,9 @@ tests:
 deploy:
   stage: deploy
   when: manual
-  rules:
-    - if: $KUBE_CTX == "loa-covid19"
-      when: always
+  only:
+    refs:
+      - master
   script:
     - sed -i "s/RELEASE_NAME/$RELEASE_NAME/g" skaffold.yaml
     - cd frontend && npm install && npm run build && cd ..
