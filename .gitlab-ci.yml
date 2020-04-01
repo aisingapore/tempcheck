@@ -36,4 +36,4 @@ deploy:
     - docker login -u $ACR_USERNAME -p $ACR_KEY 100edockerregistry.azurecr.io
     - echo "$KUBE_CONFIG $KUBE_NS $KUBE_CTX"
     - helm version
-    - skaffold debug --namespace=$KUBE_NS --kubeconfig=$KUBE_CONFIG --kube-context=$KUBE_CTX --status-check=false
+    - skaffold run -v debug --namespace=$KUBE_NS --kubeconfig=$KUBE_CONFIG --kube-context=$KUBE_CTX --status-check=false
