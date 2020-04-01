@@ -43,10 +43,10 @@ class CreateUserSerializer(serializers.ModelSerializer):
         email = data['email']
         domain = email.split('@')[1]
         if domain_list is None:
-            logging.warning('Please contact your administrators to create valid domain names')
+            logging.warning('Domain names not set. Allowing any email domains for registration')
         else:
             if domain not in domain_list:
-                raise serializers.ValidationError("Please enter an Email Address with a valid domain")
+                raise serializers.ValidationError("Please enter an Email Address with your organisation's domain")
         return data
 
     def create(self, validated_data):
