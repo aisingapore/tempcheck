@@ -34,3 +34,7 @@ Create chart name and version as used by the chart label.
 {{- define "vishnu.pvc" -}}
 {{- "vishnu-pvc-multi" -}}
 {{- end -}}
+
+{{- define "vishnu.postgres.host" -}}
+{{- printf "%s-%s" .Release.Name "postgresql" -}}
+{{- end -}}
