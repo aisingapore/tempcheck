@@ -1,11 +1,11 @@
-#kind: PersistentVolumeClaim
-#apiVersion: v1
-#metadata:
-#  name: {{ include "vishnu.postgres.pvc" . }}
-#spec:
-#  accessModes:
-#    - ReadWriteOnce
-#  storageClassName: "aks-managed-retain"
-#  resources:
-#    requests:
-#      storage: 20Gi
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "vishnu.postgres.pvc" . }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: "aks-managed-retain"
+  resources:
+    requests:
+      storage: 20Gi
