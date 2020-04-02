@@ -10,21 +10,31 @@ from .models import Entry, UserAuth
 PST = pytz.timezone('Singapore')
 
 
-class EntryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'username'] + [f'day_{i}' for i in range(7)]
-    list_display_links = None
-    search_fields = ['id', 'username']
-    filter_dates = [datetime.now(PST).date() - timedelta(days=i)
-                    for i in range(6, -1, -1)]
+class DateIndexFilter(admin.SimpleListFilter):
+    title = 'Date Index'
+    parameter_name = 'date_index'
 
-    def get_queryset(self, request):
-        print(request.GET)
-        qs = User.objects.all().order_by('id')
-        return qs
+    def lookups(self, request, model_admin):
+        return ([])
 
-    def get_readings(self, obj, index: int):
+    def queryset(self, request, queryset):
+        return queryset
+
+
+class Day:
+    ''' Class implementation to allow column header to be dynamic
+    Refer to https://stackoverflow.com/questions/19886218/django-admin-short-description-as-callable
+    for additional information on how this was implemented
+    '''
+    def __init__(self, date):
+        self.date = date
+
+    def __call__(self, obj):
+        return self.format_readings(self.get_readings(obj))
+
+    def get_readings(self, obj):
         records = obj.records.filter(
-            date_created__date=self.filter_dates[index]).order_by('date_created')
+            date_created__date=self.date).order_by('date_created')
 
         result = list()
 
@@ -61,39 +71,62 @@ class EntryAdmin(admin.ModelAdmin):
         else:
             return format_html('<span>') + formatted_readings[0] + format_html('</span>')
 
-    def update_filter_dates(self, index):
-        pass
+    @property
+    def __name__(self):
+        return self.date.strftime("%d %b")
+
+
+class EntryAdmin(admin.ModelAdmin):
+    actions = None
+    list_display = ['id', 'username'] + [f'day_{i}' for i in range(7)]
+    list_per_page = 2
+    list_filter = (DateIndexFilter, )
+    list_display_links = None
+    search_fields = ['id', 'username']
+    filter_dates = [datetime.now(PST).date() - timedelta(days=i)
+                    for i in range(6, -1, -1)]
+
+    def get_queryset(self, request):
+        print(request.GET)
+        date_index = request.GET.get('date_index', 0)
+        print(date_index)
+        self.update_filter_dates(date_index)
+        qs = User.objects.all().order_by('id')
+        return qs
+
+    def update_filter_dates(self, date_index: int):
+        self.filter_dates = [
+            datetime.now(PST).date() - timedelta(days=i+int(date_index)*7) for i in range(6, -1, -1)
+        ]
+
+    def get_property(self, index: int):
+        if not hasattr(self, '__day'):
+            self.__day = Day(self.filter_dates[index])
+        return self.__day
 
     def username(self, obj): return obj.username
     username.short_description = 'Username'
 
-    def day_6(self, obj):
-        return self.format_readings(self.get_readings(obj, 6))
-    day_6.short_description = filter_dates[6].strftime("%d %b")
+    @property
+    def day_6(self): return self.get_property(6)
 
-    def day_5(self, obj):
-        return self.format_readings(self.get_readings(obj, 5))
-    day_5.short_description = filter_dates[5].strftime("%d %b")
+    @property
+    def day_5(self): return self.get_property(5)
 
-    def day_4(self, obj):
-        return self.format_readings(self.get_readings(obj, 4))
-    day_4.short_description = filter_dates[4].strftime("%d %b")
+    @property
+    def day_4(self): return self.get_property(4)
 
-    def day_3(self, obj):
-        return self.format_readings(self.get_readings(obj, 3))
-    day_3.short_description = filter_dates[3].strftime("%d %b")
+    @property
+    def day_3(self): return self.get_property(3)
 
-    def day_2(self, obj):
-        return self.format_readings(self.get_readings(obj, 2))
-    day_2.short_description = filter_dates[2].strftime("%d %b")
+    @property
+    def day_2(self): return self.get_property(2)
 
-    def day_1(self, obj):
-        return self.format_readings(self.get_readings(obj, 1))
-    day_1.short_description = filter_dates[1].strftime("%d %b")
+    @property
+    def day_1(self): return self.get_property(1)
 
-    def day_0(self, obj):
-        return self.format_readings(self.get_readings(obj, 0))
-    day_0.short_description = filter_dates[0].strftime("%d %b")
+    @property
+    def day_0(self): return self.get_property(0)
 
 
 admin.site.register(Entry, EntryAdmin)
