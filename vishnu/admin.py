@@ -16,10 +16,11 @@ class DateIndexFilter(admin.SimpleListFilter):
     parameter_name = 'date_index'
 
     def lookups(self, request, model_admin):
+        date_index_param = max(int(request.GET.get('date_index', 0)), 0)
         return (
-            ('1', 'Previous'),
-            ('-1', 'Next'),
-            ('today', 'Today')
+            (date_index_param+1, 'Previous'),
+            (date_index_param-1, 'Next'),
+            (0, 'Today')
         )
 
     def queryset(self, request, queryset):
@@ -103,17 +104,12 @@ class EntryAdmin(admin.ModelAdmin):
     list_filter = (DateIndexFilter, )
     list_display_links = None
     search_fields = ['id', 'username']
-    date_index = 0
     filter_dates = [datetime.now(PST).date() - timedelta(days=i)
                     for i in range(6, -1, -1)]
 
     def get_queryset(self, request):
-        date_index_param = request.GET.get('date_index', 0)
-        if date_index_param == 'today':
-            self.date_index = 0
-        else:
-            self.date_index = max(self.date_index + int(date_index_param), 0)
-        self.update_filter_dates()
+        date_index_param = max(int(request.GET.get('date_index', 0)), 0)
+        self.update_filter_dates(date_index_param)
         qs = User.objects.all().order_by('id')
         return qs
 
@@ -122,9 +118,9 @@ class EntryAdmin(admin.ModelAdmin):
         extra_context = {'title': 'Temperature Readings'}
         return super(EntryAdmin, self).changelist_view(request, extra_context=extra_context)
 
-    def update_filter_dates(self):
+    def update_filter_dates(self, date_index):
         self.filter_dates = [
-            datetime.now(PST).date() - timedelta(days=i+int(self.date_index)*7) for i in range(6, -1, -1)
+            datetime.now(PST).date() - timedelta(days=i+int(date_index)*7) for i in range(6, -1, -1)
         ]
 
     def get_property(self, index: int):
