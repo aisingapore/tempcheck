@@ -68,9 +68,9 @@ def send_report(report_dict: dict):
 
         mandrill_client = mandrill.Mandrill(environ.get('MANDRILL_API_KEY'))
 
-        message = {'subject': environ.get('REPORT_EMAIL_SUBJECT', ''),
+        message = {'subject': environ.get('REPORT_EMAIL_SUBJECT', 'Tempcheck report'),
                    'from_email': environ.get('REPORT_FROM_EMAIL'),
-                   'from_name': environ.get('REPORT_FROM_NAME', ''),
+                   'from_name': environ.get('REPORT_FROM_NAME', 'Tempcheck'),
                    'html': render_to_string('report.html', report_dict, using='jinja2'),
                    'preserve_recipients': False}
 
@@ -81,7 +81,7 @@ def send_report(report_dict: dict):
 
         result = mandrill_client.messages.send(message)
         logger.info(f'Mandrill Results:\n{result}')
-        logger.info('report sent')
+        logger.info('Report sent')
     except mandrill.Error as error:
         logger.error(error)
 
