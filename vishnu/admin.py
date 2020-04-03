@@ -66,29 +66,34 @@ class Day:
                 i.sgt_date_created = i.date_created.astimezone(PST)
             am_records = [i for i in records if i.sgt_date_created.hour < 12]
             pm_records = [i for i in records if i.sgt_date_created.hour > 12]
-            am_temperature = am_records[len(am_records)-1].temperature if am_records else None
-            pm_temperature = pm_records[len(pm_records)-1].temperature if pm_records else None
+            am_temperature = (am_records[len(am_records)-1].temperature, "AM") if am_records else None
+            pm_temperature = (pm_records[len(pm_records)-1].temperature, "PM") if pm_records else None
             result.append(am_temperature)
             result.append(pm_temperature)
         else:
-            temperature = records.first().temperature if records.first() else None
-            result.append(temperature)
+            if records.first():
+                record = records.first()
+                temperature = record.temperature
+                am_pm = "AM" if record.date_created.astimezone(PST).hour < 12 else "PM"
+                result.append((temperature, am_pm))
+            else:
+                result.append(None)
 
         return result
 
     def format_readings(self, readings: list):
         formatted_readings = list()
-        num_valid_readings = len([i for i in readings if i != None])
+        num_valid_readings = len([i for i in readings if i is not None])
         for i in readings:
-            if i == None:
+            if i is None:
                 formatted_readings.append(format_html(''))
-            elif i >= 38:
-                formatted_readings.append(format_html('<mark style="color:red">{}</mark>', i))
+            elif i[0] >= 38:
+                formatted_readings.append(format_html('<mark style="color:red">{} - {}</mark>', i[1], i[0]))
             else:
-                formatted_readings.append(format_html('{}', i))
+                formatted_readings.append(format_html('{} - {}', i[1], i[0]))
 
         if num_valid_readings > 1:
-            return format_html('<span>AM - ') + formatted_readings[0] + format_html('<br>') + format_html('PM - ') + formatted_readings[1] + format_html('</span>')
+            return format_html('<span>') + formatted_readings[0] + format_html('<br>') + formatted_readings[1] + format_html('</span>')
 
         else:
             return format_html('<span>') + formatted_readings[0] + format_html('</span>')
