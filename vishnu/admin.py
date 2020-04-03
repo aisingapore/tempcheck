@@ -66,8 +66,8 @@ class Day:
                 i.sgt_date_created = i.date_created.astimezone(PST)
             am_records = [i for i in records if i.sgt_date_created.hour < 12]
             pm_records = [i for i in records if i.sgt_date_created.hour > 12]
-            am_temperature = am_records[0].temperature if am_records else None
-            pm_temperature = pm_records[0].temperature if pm_records else None
+            am_temperature = am_records[len(am_records)-1].temperature if am_records else None
+            pm_temperature = pm_records[len(pm_records)-1].temperature if pm_records else None
             result.append(am_temperature)
             result.append(pm_temperature)
         else:
@@ -82,8 +82,8 @@ class Day:
         for i in readings:
             if i == None:
                 formatted_readings.append(format_html(''))
-            elif i > 38:
-                formatted_readings.append(format_html('<mark>{}</mark>', i))
+            elif i >= 38:
+                formatted_readings.append(format_html('<mark style="color:red">{}</mark>', i))
             else:
                 formatted_readings.append(format_html('{}', i))
 
