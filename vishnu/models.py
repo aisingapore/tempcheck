@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -20,7 +21,7 @@ class Entry(models.Model):
     file = models.ImageField(upload_to=append_owner_email)
     owner = models.ForeignKey(
         "auth.User", related_name="records", on_delete=models.DO_NOTHING)
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(default=datetime.datetime.now())
 
 
 class UserAuth(models.Model):
