@@ -65,7 +65,7 @@ class Day:
             for i in records:
                 i.sgt_date_created = i.date_created.astimezone(PST)
             am_records = [i for i in records if i.sgt_date_created.hour < 12]
-            pm_records = [i for i in records if i.sgt_date_created.hour > 12]
+            pm_records = [i for i in records if i.sgt_date_created.hour >= 12]
             am_temperature = (am_records[len(am_records)-1].temperature, "AM") if am_records else None
             pm_temperature = (pm_records[len(pm_records)-1].temperature, "PM") if pm_records else None
             result.append(am_temperature)
@@ -83,19 +83,18 @@ class Day:
 
     def format_readings(self, readings: list):
         formatted_readings = list()
-        num_valid_readings = len([i for i in readings if i is not None])
-        for i in readings:
-            if i is None:
-                formatted_readings.append(format_html(''))
-            elif i[0] >= 38:
+        valid_readings = [i for i in readings if i is not None]
+        for i in valid_readings:
+            if i[0] >= 38:
                 formatted_readings.append(format_html('<mark style="color:red">{} - {}</mark>', i[1], i[0]))
             else:
                 formatted_readings.append(format_html('{} - {}', i[1], i[0]))
 
-        if num_valid_readings > 1:
+        if len(valid_readings) > 1:
             return format_html('<span>') + formatted_readings[0] + format_html('<br>') + formatted_readings[1] + format_html('</span>')
-
         else:
+            if len(valid_readings) == 0:
+                formatted_readings.append(format_html(''))
             return format_html('<span>') + formatted_readings[0] + format_html('</span>')
 
     @property
