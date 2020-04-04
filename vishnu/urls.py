@@ -14,7 +14,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import os
-from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
@@ -47,24 +46,6 @@ urlpatterns = [
          name="app",
          ),
 
-    path("service-worker.js",
-         TemplateView.as_view(template_name="service-worker.js",
-                              content_type='application/javascript'),
-         name="service-worker",
-         ),
-
-    path("manifest.json",
-         TemplateView.as_view(template_name="manifest.json",
-                              content_type='application/manifest+json'),
-         name="manifest-json",
-         ),
-
-    path("robots.txt",
-         TemplateView.as_view(template_name="robots.txt",
-                              content_type='txt/plain'),
-         name="robots-txt",
-         ),
-
     path('api/auth/', include('knox.urls')),
     path("api/auth/register", RegistrationAPI.as_view()),
     path("api/auth/login", LoginAPI.as_view()),
@@ -73,9 +54,6 @@ urlpatterns = [
 ]
 
 if not DEBUG:
-    for f in os.listdir(os.path.join(settings.FRONTEND_DIR, 'dist')):
+    for f in os.listdir('static'):
         if "precache-manifest" in f:
             add_url_for_path(f, urlpatterns)
-# Required to serve static files in prod. Workaround for now
-# Use https://pypi.org/project/dj-static/ or other solutions instead in future
-urlpatterns += staticfiles_urlpatterns()

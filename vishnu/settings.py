@@ -29,7 +29,7 @@ FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 SECRET_KEY = 'r0lqpd*5ypno*xjffm+2q_i7-3)3x5kzzgtg^g=+%uf9=og#1p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DEBUG', None))
 
 app_hostname = gethostname()
 
@@ -78,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'vishnu.urls'
@@ -163,7 +164,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Vue assets directory (assetsDir)
 STATICFILES_DIRS = [
-    os.path.join(FRONTEND_DIR, 'dist/static')
+    os.path.join(FRONTEND_DIR, 'dist')
 ]
 
 WEBPACK_LOADER = {

@@ -15,3 +15,4 @@ django-rest-knox==4.1.0
 APScheduler==3.6.3
 mandrill==1.0.59
 Jinja2==2.11.1
+WhiteNoise==5.0.1
