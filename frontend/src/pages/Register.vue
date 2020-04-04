@@ -51,7 +51,7 @@
                   @click="register"
                 >
                   Register
-                  <i class="material-icons">assignment_ind</i>
+                  <v-icon class="ml-2">mdi-clipboard-account</v-icon>
                 </v-btn>
                 <v-row justify="center" class="mt-8">
                   <v-btn

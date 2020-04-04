@@ -50,7 +50,7 @@
                   @click="login"
                 >
                   Sign In
-                  <i class="material-icons">lock_open</i>
+                  <v-icon class="ml-2">mdi-lock-open</v-icon>
                 </v-btn>
                 <v-row justify="center" class="mt-8">
                   <v-btn
