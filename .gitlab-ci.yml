@@ -1,6 +1,6 @@
 # Refer to gitlab CI job configuration docs for details
 # https://docs.gitlab.com/ee/ci/yaml/
-image: docker-registry.int.aisingapore.org/gitlab-runner-vishnu:latest
+image: plx-registry.okdapp.tekong.aisingapore.net/gitlab/vishnu-runner:latest
 
 variables:
   VISHNU_IMG: "vishnu:test"
