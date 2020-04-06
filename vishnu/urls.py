@@ -17,7 +17,6 @@ import os
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from .routers import router
 from .settings import DEBUG
@@ -50,7 +49,8 @@ urlpatterns = [
     path("api/auth/register", RegistrationAPI.as_view()),
     path("api/auth/login", LoginAPI.as_view()),
     path("api/auth/user", UserAPI.as_view()),
-    path("api/auth/verify", VerifyAPI.as_view())
+    path("api/auth/verify", VerifyAPI.as_view()),
+    path('api/auth/reset-password/', include('django_rest_passwordreset.urls'))
 ]
 
 if not DEBUG:

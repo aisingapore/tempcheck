@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'storages',
     'vishnu.apps.VishnuConfig',
-    'knox'
+    'knox',
+    'django_rest_passwordreset'
 ]
 
 REST_FRAMEWORK = {
@@ -204,3 +205,5 @@ LOGGING = {
         },
     },
 }
+
+DJANGO_REST_PASSWORDRESET_NO_INFORMATION_LEAKAGE = True

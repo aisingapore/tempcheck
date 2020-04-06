@@ -64,6 +64,18 @@
                     <br />Register here
                   </v-btn>
                 </v-row>
+                <v-row justify="center" class="mt-8">
+                  <v-btn
+                    text
+                    small
+                    color="grey accent-4"
+                    text-color="white"
+                    class="mr-4 white--text"
+                    @click="goToForgetPassword"
+                  >
+                    Forgot password?
+                  </v-btn>
+                </v-row>
               </v-form>
             </v-card>
           </v-row>
@@ -111,6 +123,9 @@ export default {
     },
     goToRegister() {
       this.$router.push("/register");
+    },
+    goToForgetPassword() {
+      this.$router.push("/forgetPassword");
     },
     save: async function() {
       const data = {
@@ -173,6 +188,17 @@ export default {
     } else if (this.$route.name === "ServerError") {
       this.snackbar.message =
         "We are currently experiencing problems with the server. Please try again later.";
+      this.snackbar.show = true;
+    } else if (this.$route.name === "PasswordEmailSent") {
+      this.snackbar.message =
+        "Click on the password reset link in the email that we just sent you.";
+      this.snackbar.show = true;
+    } else if (this.$route.name === "PasswordResetDone") {
+      this.snackbar.message =
+        "Your password has been reset. Sign in with your new password.";
+      this.snackbar.show = true;
+    } else if (this.$route.name === "ResetTokenExpired") {
+      this.snackbar.message = "Token has expired. Please request for a new reset link";;
       this.snackbar.show = true;
     }
   }

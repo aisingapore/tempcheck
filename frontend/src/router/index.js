@@ -3,6 +3,8 @@ import History from "@/pages/History";
 import New from "@/pages/New";
 import Register from "@/pages/Register";
 import SignIn from "@/pages/SignIn";
+import ForgetPassword from "@/pages/ForgetPassword";
+import ResetPassword from "@/pages/ResetPassword";
 
 const routes = [
   {
@@ -29,13 +31,48 @@ const routes = [
       {
         path: "/serverError",
         name: "ServerError"
+      },
+      {
+        path: "/passwordEmailSent",
+        name: "PasswordEmailSent"
+      },
+      {
+        path: "/passwordResetDone",
+        name: "PasswordResetDone"
+      },
+      {
+        path: "/resetTokenExpired",
+        name: "ResetTokenExpired"
       }
+
     ]
   },
   {
     path: "/register",
     name: "Register",
     component: Register,
+    children: [
+      {
+        path: "/serverError",
+        name: "ServerError"
+      }
+    ]
+  },
+  {
+    path: "/forgetPassword",
+    name: "ForgetPassword",
+    component: ForgetPassword,
+    children: [
+      {
+        path: "/serverError",
+        name: "ServerError"
+      }
+    ]
+  },
+  {
+    path: "/resetPassword",
+    name: "ResetPassword",
+    component: ResetPassword,
     children: [
       {
         path: "/serverError",
