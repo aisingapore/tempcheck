@@ -16,3 +16,4 @@ APScheduler==3.6.3
 mandrill==1.0.59
 Jinja2==2.11.1
 WhiteNoise==5.0.1
+django-rest-passwordreset==1.1.0

@@ -11,6 +11,11 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, mixins, generics
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+from django.urls import reverse
+
+from django_rest_passwordreset.signals import reset_password_token_created
 
 from knox.models import AuthToken
 from dotenv import load_dotenv
@@ -25,6 +30,8 @@ load_dotenv()
 
 logger = logging.getLogger('vishnu.scheduler')
 # pylint: disable=no-member
+
+APP_HOSTNAME = environ.get("DEPLOYMENT_HOSTNAME")
 
 # How long in days token will last before expiry, default value = 30 days
 session_expiry = getattr(settings, "TOKEN_EXPIRY")
@@ -93,8 +100,7 @@ class RegistrationAPI(generics.GenericAPIView):
         user_auth.is_verified = False
         user_auth.save()
 
-        hostname = environ.get("DEPLOYMENT_HOSTNAME")
-        link = f"{hostname}/api/auth/verify?email={user.email}&token={token}"
+        link = f"{APP_HOSTNAME}/api/auth/verify?email={user.email}&token={token}"
 
         return token, EXPIRES_IN, link
 
@@ -209,3 +215,50 @@ class VerifyAPI(APIView):
                 return redirect("/#/renewToken")
             else:
                 return redirect("/#/serverError")
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+    """
+    Handles password reset tokens
+    When a token is created, an e-mail needs to be sent to the user
+    :param sender: View Class that sent the signal
+    :param instance: View Instance that sent the signal
+    :param reset_password_token: Token Model Object
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    # send an e-mail to the user
+    context = {
+        'current_user': reset_password_token.user,
+        'username': reset_password_token.user.username,
+        'email': reset_password_token.user.email,
+        # 'reset_password_url': "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key),
+        'reset_password_url': "/#/resetPassword?token={}".format(reset_password_token.key),
+        'app_hostname': APP_HOSTNAME
+    }
+
+    # render email text
+    email_html_message = render_to_string('email/user_reset_password.html', context)
+
+    try:
+        mandrill_client = mandrill.Mandrill(
+            environ.get('MANDRILL_API_KEY'))
+
+        message = {'subject': "Reset your Tempcheck password",
+                   'from_email': "noreply@aisingapore.org",
+                   'from_name': "Tempcheck",
+                   'html': email_html_message,
+                   "preserve_recipients": False}
+        message["to"] = [{"email": reset_password_token.user.email}]
+
+        result = mandrill_client.messages.send(message)
+        logger.info(f'Mandrill Results:\n{result}')
+        logger.info('verification email sent')
+
+    except mandrill.Error as error:
+        logger.error(error)
+        return False
+
+    return True
