@@ -31,7 +31,7 @@
           @click="
             numRecordsToShow = Math.min(list.length, numRecordsToShow + 4)
           "
-          >Load {{ Math.min(4, list.length - numRecordsToShow) }} more 
+          >Load {{ Math.min(4, list.length - numRecordsToShow) }} more
         </v-btn>
       </v-col>
     </v-row>
@@ -98,7 +98,6 @@ export default {
 <style scoped>
 .entry-list {
   display: flex;
-  flex-wrap: wrap-reverse;
-  flex-direction: row-reverse;
+  flex-wrap: wrap;
 }
 </style>

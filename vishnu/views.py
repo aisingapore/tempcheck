@@ -57,7 +57,7 @@ class EntryViewSet(ImmutableViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Entry.objects.filter(owner=user)
+        return Entry.objects.filter(owner=user).order_by('-date_created')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
