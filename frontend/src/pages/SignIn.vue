@@ -198,7 +198,8 @@ export default {
         "Your password has been reset. Sign in with your new password.";
       this.snackbar.show = true;
     } else if (this.$route.name === "ResetTokenExpired") {
-      this.snackbar.message = "Token has expired. Please request for a new reset link";;
+      this.snackbar.message =
+        "Token has expired. Please request for a new reset link";
       this.snackbar.show = true;
     }
   }

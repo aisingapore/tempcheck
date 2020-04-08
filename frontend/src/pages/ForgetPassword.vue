@@ -92,7 +92,7 @@ export default {
     },
     save: async function() {
       const data = {
-        email: this.email,
+        email: this.email
       };
       // push to backend
       const url = "/api/auth/reset-password/";
@@ -101,7 +101,7 @@ export default {
         console.log(response.data);
 
         if (response.status === 200) {
-            this.goToHome();
+          this.goToHome();
         }
       } catch (err) {
         this.snackbar.message = "Error requesting password reset!";

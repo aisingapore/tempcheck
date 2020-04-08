@@ -103,21 +103,19 @@ export default {
         console.log(response.data);
 
         if (response.status === 200) {
-            this.goToHome();
+          this.goToHome();
         }
       } catch (err) {
-
-        let msg = "Error resetting new password!"
+        let msg = "Error resetting new password!";
         console.log(err.response.data);
         if (err.response.status === 404) {
           this.$router.push("/resetTokenExpired");
-        }
-        else {
-          if(err.response.data && err.response.data.password) {
+        } else {
+          if (err.response.data && err.response.data.password) {
             const msgArr = err.response.data.password;
             let m;
             msg = "";
-            for(m in msgArr) {
+            for (m in msgArr) {
               msg += msgArr[m];
             }
           }

@@ -6,7 +6,7 @@ import * as VueGoogleMaps from "vue2-google-maps";
 import router from "./router";
 import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
-import '@mdi/font/css/materialdesignicons.css'
+import "@mdi/font/css/materialdesignicons.css";
 
 Vue.config.productionTip = false;
 Vue.use(VueRouter);

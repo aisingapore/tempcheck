@@ -44,7 +44,6 @@ const routes = [
         path: "/resetTokenExpired",
         name: "ResetTokenExpired"
       }
-
     ]
   },
   {
