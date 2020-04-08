@@ -88,23 +88,9 @@
 
 <script>
 import axios from "axios";
+import moment from "moment-timezone";
 import PhotoInput from "./PhotoInput";
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec"
-];
 
-const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default {
   name: "entry-form",
   components: {
@@ -157,17 +143,6 @@ export default {
           ); // trial for file size/quality balance
         };
       };
-    },
-    getDateTime(time) {
-      const hour = time.getHours();
-      const minutes = time.getMinutes();
-      const year = time.getFullYear();
-      const date = time.getDate();
-      const month = months[time.getMonth()];
-      const day = days[time.getDay()];
-      return `${day}, ${date} ${month} ${year} ${hour % 12}:${
-        minutes < 10 ? "0" : ""
-      }${minutes} ${minutes > 12 ? "PM" : "AM"}`;
     },
     getLocation() {
       const vm = this;
@@ -284,17 +259,10 @@ export default {
       return this.locationMsg;
     },
     currentTime: function() {
-      // Date is not reactive, make it so later
-      const time = new Date(Date.now());
-      const hour = time.getHours();
-      const minutes = time.getMinutes();
-      const year = time.getFullYear();
-      const date = time.getDate();
-      const month = months[time.getMonth()];
-      const day = days[time.getDay()];
-      return `${day}, ${date} ${month} ${year} ${hour % 12}:${
-        minutes < 10 ? "0" : ""
-      }${minutes} ${hour > 12 ? "PM" : "AM"}`;
+      const userTz = moment.tz.guess();
+      return moment(this.timeTaken)
+        .tz(userTz)
+        .format("ddd, DD MMM YYYY : LT");
     }
   }
 };
