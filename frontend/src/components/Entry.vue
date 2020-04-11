@@ -2,10 +2,12 @@
   <v-dialog v-model="dialog">
     <template v-slot:activator="{ on }">
       <div class="entry-container" v-on="on">
-        <span class="date-time">{{ showTime }}</span
+        <span class="date-time">{{ timeTaken }}</span
         ><br />
-        <span class="display-1">{{ temperature.toFixed(1) }}</span>
-        <span class="deg-c">&deg;C</span>
+        <span v-bind:class="{ twarn: parseFloat(temperature) >= 38 }">
+          <span class="display-1">{{ temperature }}</span>
+          <span v-if="!isNaN(temperature)" class="deg-c">&deg;C</span>
+        </span>
       </div>
     </template>
     <v-card ma-0>
@@ -13,13 +15,15 @@
         <v-container>
           <v-row class="mt-n6 mb-n3">
             <v-col cols="12" class="text-right body-2 grey--text">
-              Your temperature at {{ showTime }}
+              Your temperature at {{ timeTaken }}
             </v-col>
           </v-row>
           <v-row class="text-right mb-n3">
             <v-col cols="12" class="text-right grey--text text--darken-2">
-              <span class="display-2">{{ temperature.toFixed(1) }}</span>
-              <span class="body-2">&deg;C</span>
+              <span v-bind:class="{ twarn: parseFloat(temperature) >= 38 }">
+                <span class="display-2">{{ temperature }}</span>
+                <span v-if="!isNaN(temperature)" class="body-2">&deg;C</span>
+              </span>
             </v-col>
           </v-row>
         </v-container>
@@ -68,7 +72,6 @@
 
 <script>
 import OneMap from "@/components/OneMap";
-import moment from "moment-timezone";
 
 export default {
   name: "entry",
@@ -81,22 +84,14 @@ export default {
       map: "onemap"
     };
   },
-  computed: {
-    showTime() {
-      const userTz = moment.tz.guess();
-      return moment(this.timeTaken)
-        .tz(userTz)
-        .format("LT, ddd DD MMM YYYY");
-    }
-  },
   props: {
     temperature: {
-      type: Number,
-      default: 37
+      type: String,
+      default: "37"
     },
     timeTaken: {
-      type: Date,
-      default: () => new Date("12-12-2019 11:22:33Z")
+      type: String,
+      default: () => new Date()
     },
     location: {
       type: Object,
@@ -135,5 +130,9 @@ export default {
 
 .card-title {
   background-color: #dbedff;
+}
+
+.twarn {
+  color: red;
 }
 </style>
