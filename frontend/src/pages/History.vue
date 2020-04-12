@@ -12,7 +12,7 @@
       </v-col>
     </v-row>
     <v-row justify="center">
-      <v-col cols="4" class="entry-list">
+      <v-col cols="12" md="6" lg="4" class="entry-list">
         <entry
           v-for="item in todayList"
           :key="item.date"
@@ -23,7 +23,7 @@
       </v-col>
     </v-row>
     <v-row justify="center">
-      <v-col cols="4" class="entry-list">
+      <v-col cols="12" md="6" lg="4" class="entry-list">
         <entry
           v-for="item in displayList.slice(0, numRecordsToShow)"
           :key="item.date"
