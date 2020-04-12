@@ -149,26 +149,19 @@ export default {
             month: enDate.month(),
             day: enDate.date()
           });
+
           if (now.diff(currentEntryDay, "days") === 0) {
             // push only latest entry
-            if (enDate.hour() < 12 && this.todayList.length === 0) {
+            // push only latest (ie first) entry
+            if (enDate.hour() >= 12 && this.todayList.length === 0) {
               this.todayList.push(displayEntry);
             }
 
-            if (enDate.hour() >= 12) {
-              if (this.todayList.length === 0) {
-                const missingAM = {
-                  date: "AM, " + currentEntryDay.format("ddd DD MMM YYYY"),
-                  location: { lat: 1.3521, long: 103.8198 },
-                  temperature: "None"
-                };
-                this.todayList.push(missingAM);
-              }
-              // push only latest entry
-              if (this.todayList.length === 1) {
-                this.todayList.push(displayEntry);
-              }
+            if (enDate.hour() < 12 && this.todayList.length <= 1) {
+              this.todayList.push(displayEntry);
             }
+
+
           } else {
             const entryToReplace = displays[entryKey + suffix];
             // replace only if it is None, else already set to latest value
