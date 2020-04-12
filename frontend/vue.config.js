@@ -12,6 +12,9 @@ module.exports = {
       favicon32: "static/icons/favicon-32x32.png",
       favicon16: "static/icons/favicon-16x16.png",
       appleTouchIcon: "static/icons/apple-touch-icon-152x152.png"
+    },
+    workboxOptions: {
+      cleanupOutdatedCaches: true
     }
   },
 
